@@ -107,9 +107,10 @@ public class Order implements Serializable{
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL,
             orphanRemoval = true)
-    @JoinTable(name = "Order_ShoppingItem",
-            joinColumns = { @JoinColumn(name = "OrderId") },
-            inverseJoinColumns = { @JoinColumn(name = "ShoppingItemId") })
+    @JoinTable(name = "Orders_ShoppingItem",
+            // JoinColumn name為SQL表實體的名稱，referencedColName為@Id所代表的column name
+            joinColumns = { @JoinColumn(name = "OrderId")},
+            inverseJoinColumns = {@JoinColumn(name = "ShoppingItemId")})
     @OrderColumn(name = "SortKey")
     @XmlElement(name = "shoppingItem")
     @JsonProperty

@@ -53,6 +53,7 @@ public class SessionRegistryImpl implements SessionRegistry{
     @Override
     public int getNumberOfSessions()
     {
+
         return this.sessions.size();
     }
 

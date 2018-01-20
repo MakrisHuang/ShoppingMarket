@@ -3,6 +3,7 @@
               required="true" %>
 <%@ attribute name="bodyTitle" type="java.lang.String" rtexprvalue="true"
               required="true" %>
+<%@ attribute name="loginFailed" type="java.lang.Boolean" rtexprvalue="true" %>
 <%@ attribute name="loginFragment" fragment="true" required="false" %>
 <%@ attribute name="registerFragment" fragment="true" required="false" %>
 <%@ include file="/WEB-INF/jsp/base.jspf" %>

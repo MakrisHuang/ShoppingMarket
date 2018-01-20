@@ -44,7 +44,6 @@ public class ShoppingItem implements Serializable{
     }
 
     @Basic
-    @Column(name = "Name")
     @XmlElement
     @JsonProperty
     public String getName() {

@@ -2,6 +2,7 @@ package com.makris.config;
 
 import com.makris.site.filter.AuthenticationFilter;
 import com.makris.site.filter.LoggingFilter;
+import com.makris.site.session.SessionListener;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
@@ -21,7 +22,7 @@ public class Bootstrap implements WebApplicationInitializer
                 new AnnotationConfigWebApplicationContext();
         rootContext.register(RootContextConfiguration.class);
         container.addListener(new ContextLoaderListener(rootContext));
-//        container.addListener(SessionListener.class);
+        container.addListener(SessionListener.class);
 
         AnnotationConfigWebApplicationContext webContext =
                 new AnnotationConfigWebApplicationContext();
@@ -53,8 +54,7 @@ public class Bootstrap implements WebApplicationInitializer
                 "authenticationFilter", new AuthenticationFilter()
         );
         registration.addMappingForUrlPatterns(
-                null, false, "/ticket", "/ticket/*", "/chat", "/chat/*",
-                "/session", "/session/*"
+                null, false, "/", "/home/", "/home/*", "/login/", "/login/*"
         );
     }
 }

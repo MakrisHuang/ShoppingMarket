@@ -127,7 +127,7 @@ public class RootContextConfiguration implements
     public DataSource customerSupportDataSource()
     {
         JndiDataSourceLookup lookup = new JndiDataSourceLookup();
-        return lookup.getDataSource("jdbc/CustomerSupport");
+        return lookup.getDataSource("jdbc/ShoppingMarket");
     }
 
     @Bean

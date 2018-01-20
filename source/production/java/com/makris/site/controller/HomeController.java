@@ -1,27 +1,30 @@
 package com.makris.site.controller;
 
 import com.makris.config.annotation.WebController;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 
+import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 @WebController
 public class HomeController {
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public ModelAndView home(Map<String, Object> model){
+    private static final Logger logger = LogManager.getLogger();
+
+    @RequestMapping(value = "home", method = RequestMethod.GET)
+    public ModelAndView home(Map<String, Object> model, HttpSession session){
+        logger.debug("get home");
+
         model.put("loginFailed", false);
         model.put("loginForm", new LoginForm());
         model.put("registerForm", new RegisterForm());
         return new ModelAndView("home");
     }
 
-    private ModelAndView getTicketRedirect()
-    {
-        return new ModelAndView(new RedirectView("/ticket/list", true, false));
-    }
+
 
     public static class LoginForm
     {
