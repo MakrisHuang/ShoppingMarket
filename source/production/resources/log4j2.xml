@@ -21,7 +21,7 @@
             <appender-ref ref="Console" />
             <appender-ref ref="WroxFileAppender" />
         </root>
-        <logger name="com.wrox" level="info" />
+        <logger name="com.makris" level="info" />
         <logger name="org.apache" level="info" />
         <logger name="org.springframework" level="info" />
     </loggers>
