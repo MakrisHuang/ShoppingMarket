@@ -100,7 +100,7 @@
                                 </div>
                             </c:if>
 
-                            <form:form method="post" modelAttribute="loginForm">
+                            <form:form method="post" modelAttribute="loginForm" >
                                 <form:label path="username"><spring:message code="field.login.username" /></form:label><br />
                                 <form:input path="username" /><br />
                                 <form:errors path="username" cssClass="errors" /><br />

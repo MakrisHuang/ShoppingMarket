@@ -29,6 +29,8 @@ public class Customer extends UserPrincipal{
 
     private String address;
 
+    private String email;
+
     @Basic
     @XmlElement
     @JsonProperty
@@ -60,5 +62,16 @@ public class Customer extends UserPrincipal{
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    @Basic
+    @XmlElement
+    @JsonProperty
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

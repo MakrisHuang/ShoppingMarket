@@ -40,10 +40,11 @@ public class HomeController {
         return new ModelAndView(JSP_HOME);
     }
 
-    @RequestMapping(value = "home", method = RequestMethod.POST)
+    @RequestMapping(value = "home/login", method = RequestMethod.POST)
     public ModelAndView login(Map<String, Object> model, HttpSession session,
-                        HttpServletRequest request, @Valid LoginForm form,
-                        Errors errors){
+                              HttpServletRequest request, @Valid LoginForm form,
+                              Errors errors){
+
         if (UserPrincipal.getPrincipal(session) != null){
             // 重新導向到home頁面
             return this.getHomeRedirect();
@@ -66,7 +67,7 @@ public class HomeController {
             form.setPassword(null);
             model.put("loginFailed", true);
             model.put("loginForm", form);
-            return new ModelAndView(JSP_LOGIN);
+            return new ModelAndView(JSP_HOME);
         }
 
         UserPrincipal.setPrincipal(session, customer);
@@ -74,7 +75,7 @@ public class HomeController {
         return new ModelAndView(JSP_HOME);
     }
 
-    @RequestMapping(value = "home", method = RequestMethod.POST)
+    @RequestMapping(value = "home/register", method = RequestMethod.POST)
     public ModelAndView register(Map<String, Object> model, HttpSession session,
                               HttpServletRequest request, @Valid RegisterForm form,
                               Errors errors){
@@ -82,9 +83,13 @@ public class HomeController {
             // 重新導向到home頁面
             return getHomeRedirect();
         }
+        if (errors.hasErrors()){
+            form.setPassword(null);
+            return getHomeRedirect();
+        }
         boolean isEligible;
         try{
-            isEligible = this.authenticationService.isEligibleForRegiter(form.getEmail());
+            isEligible = this.authenticationService.isEligibleForRegister(form.getEmail());
         }catch (ConstraintViolationException e){
             form.setPassword(null);
             model.put("validationErrors", e.getConstraintViolations());

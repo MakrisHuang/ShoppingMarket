@@ -52,7 +52,7 @@ public class AuthenticationServiceImpl implements AuthenticationService{
 
     @Override
     @Transactional
-    public boolean isEligibleForRegiter(String email) {
+    public boolean isEligibleForRegister(String email) {
         Customer customer = this.customerRepository.getByEmail(email);
         // 若用戶不存在，代表可以註冊
         return (customer == null) ? true : false;
