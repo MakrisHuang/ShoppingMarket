@@ -100,20 +100,21 @@
                                 </div>
                             </c:if>
 
-                            <form:form method="post" modelAttribute="loginForm" >
+                            <form:form action="home/login" method="post" modelAttribute="loginForm" >
                                 <form:label path="username"><spring:message code="field.login.username" /></form:label><br />
                                 <form:input path="username" /><br />
                                 <form:errors path="username" cssClass="errors" /><br />
                                 <form:label path="password"><spring:message code="field.login.password" /></form:label><br />
                                 <form:password path="password" /><br />
                                 <form:errors path="password" cssClass="errors" /><br />
-                                <input type="submit" value="<spring:message code="field.login.submit" />" />
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary"><spring:message code="field.login.submit" /></button>
+                                </div>
                             </form:form>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
-                        </div>
+
                     </div>
                 </div>
             </div>
@@ -130,7 +131,7 @@
                         </div>
                         <div class="modal-body">
                             <!-- do register jsp fragment -->
-                            <form:form method="post" modelAttribute="registerForm">
+                            <form:form action="" method="post" modelAttribute="registerForm">
                                 <form:label path="username"><spring:message code="field.register.username" /></form:label><br />
                                 <form:input path="username" /><br />
                                 <form:errors path="username" cssClass="errors" /><br />
@@ -147,12 +148,15 @@
                                 <form:input path="telphone" /><br />
                                 <form:errors path="telphone" cssClass="errors" /><br />
 
-                                <input type="submit" value="<spring:message code="field.register.submit" />" />
+                                <form:label path="address"><spring:message code="field.register.address" /></form:label><br />
+                                <form:input path="address" /><br />
+                                <form:errors path="address" cssClass="errors" /><br />
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary"><spring:message code="field.register.submit" /></button>
+                                </div>
                             </form:form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
                         </div>
                     </div>
                 </div>
