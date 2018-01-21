@@ -34,7 +34,7 @@ public class Order implements Serializable{
 
     private Integer price;
 
-    private Customer customer;
+    private UserPrincipal customer;
 
     private String status;
 
@@ -72,11 +72,11 @@ public class Order implements Serializable{
     @JoinColumn(name = "UserId")
     @XmlElement
     @JsonProperty
-    public Customer getCustomer() {
+    public UserPrincipal getCustomer() {
         return customer;
     }
 
-    public void setCustomer(Customer customer) {
+    public void setCustomer(UserPrincipal customer) {
         this.customer = customer;
     }
 

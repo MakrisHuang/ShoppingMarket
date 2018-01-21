@@ -7,18 +7,12 @@ CREATE TABLE UserPrincipal (
   UserId BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   Username VARCHAR(30) NOT NULL,
   HashedPassword BINARY(60) NOT NULL,
-  UNIQUE KEY UserPrincipal_Username (Username)
-) ENGINE = InnoDB;
-
-CREATE TABLE Customer (
-  UserId BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  Username VARCHAR(30) NOT NULL,
-  HashedPassword BINARY(60) NOT NULL,
   NickName VARCHAR(255) NULL,
   TelPhone VARCHAR(30) NOT NULL,
   PostCode VARCHAR(30) NULL,
   Address VARCHAR(255) NULL,
-  UNIQUE KEY Customer_Username (Username)
+  Email VARCHAR(255) NOT NULL,
+  UNIQUE KEY UserPrincipal_Username (Username)
 ) ENGINE = InnoDB;
 
 CREATE TABLE Orders(

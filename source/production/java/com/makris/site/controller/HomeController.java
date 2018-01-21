@@ -1,7 +1,6 @@
 package com.makris.site.controller;
 
 import com.makris.config.annotation.WebController;
-import com.makris.site.entities.Customer;
 import com.makris.site.entities.UserPrincipal;
 import com.makris.site.service.AuthenticationService;
 import org.apache.logging.log4j.LogManager;
@@ -42,7 +41,7 @@ public class HomeController {
 
     @RequestMapping(value = "home/login", method = RequestMethod.POST)
     public ModelAndView login(Map<String, Object> model, HttpSession session,
-                              HttpServletRequest request, @Valid LoginForm form,
+                              HttpServletRequest request, LoginForm form,
                               Errors errors){
 
         if (UserPrincipal.getPrincipal(session) != null){
@@ -53,7 +52,7 @@ public class HomeController {
             form.setPassword(null);
             return null;
         }
-        Customer customer;
+        UserPrincipal customer;
         try{
             customer = this.authenticationService.
                     authenticateLogin(form.getUsername(), form.getPassword());
@@ -67,6 +66,7 @@ public class HomeController {
             form.setPassword(null);
             model.put("loginFailed", true);
             model.put("loginForm", form);
+            model.put("registerForm", new RegisterForm());
             return new ModelAndView(JSP_HOME);
         }
 
@@ -97,7 +97,7 @@ public class HomeController {
         }
 
         if (isEligible){
-            Customer customer = new Customer();
+            UserPrincipal customer = new UserPrincipal();
             customer.setUsername(form.getUsername());
             customer.setAddress(form.getAddress());
             customer.setTelPhone(form.getTelphone());
@@ -140,7 +140,7 @@ public class HomeController {
         }
     }
 
-    private static class RegisterForm {
+    public static class RegisterForm {
 
         private String username;
 
@@ -186,12 +186,12 @@ public class HomeController {
             this.telphone = telphone;
         }
 
-        public String getAddress() {
-            return address;
-        }
-
         public void setAddress(String address) {
             this.address = address;
+        }
+
+        public String getAddress() {
+            return address;
         }
 
         public String getPostCode() {

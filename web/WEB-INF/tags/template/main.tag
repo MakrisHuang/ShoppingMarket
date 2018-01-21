@@ -5,6 +5,9 @@
               required="true" %>
 <%@ attribute name="loginFailed" type="java.lang.Boolean" rtexprvalue="true" %>
 <%@ attribute name="loginFragment" fragment="true" required="false" %>
+
+<%--@elvariable id="loginForm" type="com.makris.site.controller.HomeController.LoginForm" --%>
+<%--@elvariable id="registerForm" type="com.makris.site.controller.HomeController.RegisterForm" --%>
 <%@ attribute name="registerFragment" fragment="true" required="false" %>
 <%@ include file="/WEB-INF/jsp/base.jspf" %>
 <!DOCTYPE html>
@@ -131,7 +134,7 @@
                         </div>
                         <div class="modal-body">
                             <!-- do register jsp fragment -->
-                            <form:form action="" method="post" modelAttribute="registerForm">
+                            <form:form action="home/register" method="post" modelAttribute="registerForm">
                                 <form:label path="username"><spring:message code="field.register.username" /></form:label><br />
                                 <form:input path="username" /><br />
                                 <form:errors path="username" cssClass="errors" /><br />

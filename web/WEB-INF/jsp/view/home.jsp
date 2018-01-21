@@ -5,7 +5,7 @@
   Time: 上午10:24
   To change this template use File | Settings | File Templates.
 --%>
-<%--@elvariable id="loginForm" type="com.makris.site.controller.AuthenticationController.Form"--%>
+
 <%--@elvariable id="validationErrors" type="java.util.Set<javax.validation.ConstraintViolation>"--%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <spring:message code="title.home" var="homeTitle" />

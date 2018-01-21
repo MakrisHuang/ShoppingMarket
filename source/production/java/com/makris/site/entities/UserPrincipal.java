@@ -3,15 +3,7 @@ package com.makris.site.entities;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 import javax.servlet.http.HttpSession;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -22,7 +14,7 @@ import java.security.Principal;
 @Entity
 @Table(uniqueConstraints = {
         @UniqueConstraint(name = "UserPrincipal_Username", columnNames = "Username")
-})
+}, name = "UserPrincipal")
 @XmlAccessorType(XmlAccessType.NONE)
 @JsonAutoDetect(creatorVisibility = JsonAutoDetect.Visibility.NONE,
         fieldVisibility = JsonAutoDetect.Visibility.NONE,
@@ -40,6 +32,14 @@ public class UserPrincipal implements Principal, Cloneable, Serializable
     private String username;
 
     private byte[] password;
+
+    private String telPhone;
+
+    private String postCode;
+
+    private String address;
+
+    private String email;
 
     @Id
     @Column(name = "UserId")
@@ -86,6 +86,50 @@ public class UserPrincipal implements Principal, Cloneable, Serializable
     public void setPassword(byte[] password)
     {
         this.password = password;
+    }
+
+    @Basic
+    @XmlElement
+    @JsonProperty
+    public String getTelPhone() {
+        return telPhone;
+    }
+
+    public void setTelPhone(String telPhone) {
+        this.telPhone = telPhone;
+    }
+
+    @Basic
+    @XmlElement
+    @JsonProperty
+    public String getPostCode() {
+        return postCode;
+    }
+
+    public void setPostCode(String postCode) {
+        this.postCode = postCode;
+    }
+
+    @Basic
+    @XmlElement
+    @JsonProperty
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    @Basic
+    @XmlElement
+    @JsonProperty
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     @Override
