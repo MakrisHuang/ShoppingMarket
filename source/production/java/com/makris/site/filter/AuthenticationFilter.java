@@ -19,17 +19,7 @@ public class AuthenticationFilter implements Filter
         final Principal principal = UserPrincipal.getPrincipal(session);
         if(principal == null)
         {
-//            ((HttpServletResponse)response).sendRedirect(
-//                    ((HttpServletRequest) request).getContextPath() + "/"
-//            );
-
-            chain.doFilter(
-                    new HttpServletRequestWrapper((HttpServletRequest)request)
-                    {
-
-                    },
-                    response
-            );
+            chain.doFilter(request, response);
         }
         else
         {

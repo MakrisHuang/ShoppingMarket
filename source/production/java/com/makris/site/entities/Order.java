@@ -6,7 +6,6 @@ import com.makris.site.converters.InstantConverter;
 
 import javax.persistence.*;
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.time.Instant;
@@ -35,8 +34,7 @@ public class Order implements Serializable{
 
     private Integer price;
 
-    @NotNull(message = "{validate.ticket.customer}")
-    private UserPrincipal customer;
+    private Customer customer;
 
     private String status;
 
@@ -74,11 +72,11 @@ public class Order implements Serializable{
     @JoinColumn(name = "UserId")
     @XmlElement
     @JsonProperty
-    public UserPrincipal getCustomer() {
+    public Customer getCustomer() {
         return customer;
     }
 
-    public void setCustomer(UserPrincipal customer) {
+    public void setCustomer(Customer customer) {
         this.customer = customer;
     }
 

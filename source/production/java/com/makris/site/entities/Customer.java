@@ -23,24 +23,11 @@ import javax.xml.bind.annotation.XmlElement;
         setterVisibility = JsonAutoDetect.Visibility.NONE)
 public class Customer extends UserPrincipal{
 
-    private String nickName;
-
     private String telPhone;
 
     private String postCode;
 
     private String address;
-
-    @Basic
-    @XmlElement
-    @JsonProperty
-    public String getNickName() {
-        return nickName;
-    }
-
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
-    }
 
     @Basic
     @XmlElement
