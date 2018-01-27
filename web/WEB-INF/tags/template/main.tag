@@ -4,7 +4,6 @@
 <%@ attribute name="bodyTitle" type="java.lang.String" rtexprvalue="true"
               required="true" %>
 <%@ attribute name="loginFailed" type="java.lang.Boolean" rtexprvalue="true" %>
-<%@ attribute name="loginFragment" fragment="true" required="false" %>
 
 <%--@elvariable id="loginForm" type="com.makris.site.controller.HomeController.LoginForm" --%>
 <%--@elvariable id="registerForm" type="com.makris.site.controller.HomeController.RegisterForm" --%>
@@ -33,21 +32,19 @@
         <link rel="stylesheet" href="<c:url value="/resource/stylesheet/dashboard.css" />" />
 
         <script type="text/javascript" lang="javascript">
-            var postInvisibleForm = function(url, fields) {
-                var form = $('<form id="mapForm" method="post"></form>')
-                        .attr({ action: url, style: 'display: none;' });
-                for(var key in fields) {
-                    if(fields.hasOwnProperty(key))
-                        form.append($('<input type="hidden">').attr({
-                            name: key, value: fields[key]
-                        }));
-                }
-                $('body').append(form);
-                form.submit();
-            };
-            var newChat = function() {
-                postInvisibleForm('<c:url value="/chat/new" />', { });
-            };
+            // var postInvisibleForm = function(url, fields) {
+            //     var form = $('<form id="mapForm" method="post"></form>')
+            //             .attr({ action: url, style: 'display: none;' });
+            //     for(var key in fields) {
+            //         if(fields.hasOwnProperty(key))
+            //             form.append($('<input type="hidden">').attr({
+            //                 name: key, value: fields[key]
+            //             }));
+            //     }
+            //     $('body').append(form);
+            //     form.submit();
+            // };
+
         </script>
     </head>
     <body>
@@ -60,9 +57,6 @@
 
                 <div class="collapse navbar-collapse" id="navbarsExampleDefault">
                     <ul class="navbar-nav mr-auto">
-                        <li class="nav-item active">
-                            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                        </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#" data-toggle="modal" data-target="#loginModal"><spring:message code="title.login"/></a>
                         </li>
@@ -103,7 +97,7 @@
                                 </div>
                             </c:if>
 
-                            <form:form action="home/login" method="post" modelAttribute="loginForm" >
+                            <form:form action="/login" method="post" modelAttribute="loginForm" >
                                 <form:label path="username"><spring:message code="field.login.username" /></form:label><br />
                                 <form:input path="username" /><br />
                                 <form:errors path="username" cssClass="errors" /><br />
@@ -134,7 +128,7 @@
                         </div>
                         <div class="modal-body">
                             <!-- do register jsp fragment -->
-                            <form:form action="home/register" method="post" modelAttribute="registerForm">
+                            <form:form action="/register" method="post" modelAttribute="registerForm">
                                 <form:label path="username"><spring:message code="field.register.username" /></form:label><br />
                                 <form:input path="username" /><br />
                                 <form:errors path="username" cssClass="errors" /><br />

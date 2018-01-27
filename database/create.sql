@@ -44,3 +44,4 @@ CREATE TABLE Orders_ShoppingItem(
     REFERENCES ShoppingItem(ShoppingItemId) ON DELETE CASCADE,
   INDEX Orders_OrderedShoppingItems (OrderId, SortKey, ShoppingItemId)
 ) ENGINE = InnoDB;
+

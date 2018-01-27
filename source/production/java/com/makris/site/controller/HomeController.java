@@ -29,7 +29,7 @@ public class HomeController {
     @Inject
     AuthenticationService authenticationService;
 
-    @RequestMapping(value = "home", method = RequestMethod.GET)
+    @RequestMapping(value = "", method = RequestMethod.GET)
     public ModelAndView home(Map<String, Object> model, HttpSession session){
         logger.debug("get home");
 
@@ -39,7 +39,7 @@ public class HomeController {
         return new ModelAndView(JSP_HOME);
     }
 
-    @RequestMapping(value = "home/login", method = RequestMethod.POST)
+    @RequestMapping(value = "login", method = RequestMethod.POST)
     public ModelAndView login(Map<String, Object> model, HttpSession session,
                               HttpServletRequest request, LoginForm form,
                               Errors errors){
@@ -75,7 +75,7 @@ public class HomeController {
         return new ModelAndView(JSP_HOME);
     }
 
-    @RequestMapping(value = "home/register", method = RequestMethod.POST)
+    @RequestMapping(value = "register", method = RequestMethod.POST)
     public ModelAndView register(Map<String, Object> model, HttpSession session,
                               HttpServletRequest request, @Valid RegisterForm form,
                               Errors errors){
@@ -100,10 +100,14 @@ public class HomeController {
             UserPrincipal customer = new UserPrincipal();
             customer.setUsername(form.getUsername());
             customer.setAddress(form.getAddress());
+            customer.setEmail(form.getEmail());
             customer.setTelPhone(form.getTelphone());
             customer.setPostCode(form.getPostCode());
 
             this.authenticationService.saveNewUser(customer, form.getPassword());
+            model.put("loginForm", null);
+            model.put("registerForm", null);
+            model.put("loginFailed", false);
         }
         return new ModelAndView(JSP_HOME);
     }
