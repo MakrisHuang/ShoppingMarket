@@ -26,7 +26,7 @@ public class ShoppingItem implements Serializable{
 
     private String description;
 
-    private Double price;
+    private Integer price;
 
     private byte[] image;
 
@@ -79,11 +79,11 @@ public class ShoppingItem implements Serializable{
     @Basic
     @XmlElement
     @JsonProperty
-    public Double getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 

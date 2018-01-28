@@ -25,7 +25,7 @@ public class UserPrincipal implements Principal, Cloneable, Serializable
 {
     private static final long serialVersionUID = 1L;
 
-    private static final String SESSION_ATTRIBUTE_KEY = "com.makris.user.principal";
+    public static final String SESSION_ATTRIBUTE_KEY = "com.makris.user.principal";
 
     private long id;
 

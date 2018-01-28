@@ -2,6 +2,7 @@ package com.makris.site.service;
 
 import com.makris.site.entities.Order;
 import com.makris.site.entities.ShoppingItem;
+import com.makris.site.entities.UserPrincipal;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
@@ -13,7 +14,7 @@ import java.util.List;
 @Validated
 public interface OrderService {
     @NotNull
-    List<Order> getAllOrdersByCustomer(String customer);
+    List<Order> getAllOrdersByCustomer(UserPrincipal customer);
 
     Order getOrder(long orderId);
     void save(@Valid Order order);

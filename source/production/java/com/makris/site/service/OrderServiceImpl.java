@@ -2,8 +2,8 @@ package com.makris.site.service;
 
 import com.makris.site.entities.Order;
 import com.makris.site.entities.ShoppingItem;
+import com.makris.site.entities.UserPrincipal;
 import com.makris.site.repositories.OrderRepository;
-import com.makris.site.repositories.ShoppingItemRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     @Transactional
-    public List<Order> getAllOrdersByCustomer(String customer) {
+    public List<Order> getAllOrdersByCustomer(UserPrincipal customer) {
         Iterable<Order> orders = this.orderRepository.findByCustomer(customer);
         List<Order> orderList = new ArrayList<>();
         orders.forEach(orderList::add);

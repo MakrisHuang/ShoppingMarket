@@ -54,7 +54,8 @@ public class Bootstrap implements WebApplicationInitializer
                 "authenticationFilter", new AuthenticationFilter()
         );
         registration.addMappingForUrlPatterns(
-                null, false, "/", "/home/", "/home/*", "/login/", "/login/*"
+                null, false, "/", "/home/", "/home/*", "/login/", "/login/*",
+                "/register/", "/register/*", "/order/", "/order/*"
         );
     }
 }

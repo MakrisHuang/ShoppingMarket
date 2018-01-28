@@ -105,6 +105,10 @@ public class HomeController {
             customer.setPostCode(form.getPostCode());
 
             this.authenticationService.saveNewUser(customer, form.getPassword());
+
+            UserPrincipal.setPrincipal(session, customer);
+            request.changeSessionId();
+
             model.put("loginForm", null);
             model.put("registerForm", null);
             model.put("loginFailed", false);
