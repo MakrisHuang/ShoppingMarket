@@ -88,7 +88,7 @@ public class ShoppingItem implements Serializable{
     }
 
     @Lob
-    @Basic(fetch = FetchType.LAZY)
+    @Basic(fetch = FetchType.EAGER)
     @XmlElement
     @XmlSchemaType(name = "base64Binary")
     @JsonProperty

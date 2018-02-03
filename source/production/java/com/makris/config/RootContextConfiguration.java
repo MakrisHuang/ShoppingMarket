@@ -137,6 +137,7 @@ public class RootContextConfiguration implements
         properties.put("javax.persistence.schema-generation.database.action",
                 "none");
         properties.put("hibernate.ejb.use_class_enhancer", "true");
+        properties.put("spring.jpa.open-in-view", "true");
 
         HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
         adapter.setDatabasePlatform("org.hibernate.dialect.MySQL5InnoDBDialect");

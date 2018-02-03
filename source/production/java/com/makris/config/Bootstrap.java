@@ -55,7 +55,7 @@ public class Bootstrap implements WebApplicationInitializer
         );
         registration.addMappingForUrlPatterns(
                 null, false, "/", "/home/", "/home/*", "/login/", "/login/*",
-                "/register/", "/register/*", "/order/", "/order/*"
+                "/register/", "/register/*", "/order/", "/order/*", "/shopping/", "/shopping/*"
         );
     }
 }
