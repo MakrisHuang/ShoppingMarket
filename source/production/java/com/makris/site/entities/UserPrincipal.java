@@ -172,4 +172,8 @@ public class UserPrincipal implements Principal, Cloneable, Serializable
     {
         session.setAttribute(SESSION_ATTRIBUTE_KEY, principal);
     }
+
+    public static void removePrincipal(HttpSession session, Principal principal){
+        session.removeAttribute(SESSION_ATTRIBUTE_KEY);
+    }
 }

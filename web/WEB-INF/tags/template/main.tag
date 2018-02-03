@@ -4,9 +4,11 @@
 <%@ attribute name="bodyTitle" type="java.lang.String" rtexprvalue="true"
               required="true" %>
 <%@ attribute name="loginFailed" type="java.lang.Boolean" rtexprvalue="true" %>
+<%@ attribute name="userName" type="java.lang.String" rtexprvalue="true" %>
 
 <%--@elvariable id="loginForm" type="com.makris.site.controller.HomeController.LoginForm" --%>
 <%--@elvariable id="registerForm" type="com.makris.site.controller.HomeController.RegisterForm" --%>
+
 <%@ attribute name="registerFragment" fragment="true" required="false" %>
 <%@ include file="/WEB-INF/jsp/base.jspf" %>
 <!DOCTYPE html>
@@ -32,18 +34,7 @@
         <link rel="stylesheet" href="<c:url value="/resource/stylesheet/dashboard.css" />" />
 
         <script type="text/javascript" lang="javascript">
-            // var postInvisibleForm = function(url, fields) {
-            //     var form = $('<form id="mapForm" method="post"></form>')
-            //             .attr({ action: url, style: 'display: none;' });
-            //     for(var key in fields) {
-            //         if(fields.hasOwnProperty(key))
-            //             form.append($('<input type="hidden">').attr({
-            //                 name: key, value: fields[key]
-            //             }));
-            //     }
-            //     $('body').append(form);
-            //     form.submit();
-            // };
+
 
         </script>
     </head>
@@ -55,14 +46,37 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
+                <%-- collapse navbar--%>
                 <div class="collapse navbar-collapse" id="navbarsExampleDefault">
                     <ul class="navbar-nav mr-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" data-toggle="modal" data-target="#loginModal"><spring:message code="title.login"/></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" data-toggle="modal" data-target="#registerModal"><spring:message code="title.register"/></a>
-                        </li>
+                        <c:choose>
+                            <c:when test="${loginFailed}">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#" data-toggle="modal" data-target="#loginModal"><spring:message code="title.login"/></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#" data-toggle="modal" data-target="#registerModal"><spring:message code="title.register"/></a>
+                                </li>
+                            </c:when>
+                            <c:otherwise>
+                                <li class="nav-item">
+                                    <span class="navbar-text"><spring:message code="title.welcome"/> , <c:out value="${userName}"/></span>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="<c:url value="/logout" />"><spring:message code="nav.item.logout" /></a>
+                                </li>
+                                <!-- collapse profile -->
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <spring:message code="title.profile" />
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href="#"><spring:message code="title.profile.basic"/></a>
+                                        <a class="dropdown-item" href="#"><spring:message code="title.profile.orders" /></a>
+                                    </div>
+                                </li>
+                            </c:otherwise>
+                        </c:choose>
                     </ul>
                     <form class="form-inline mt-2 mt-md-0">
                         <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
@@ -171,22 +185,6 @@
                                 <li><a class="nav-link" href="#"><spring:message code="title.shopping.3C"/></a></li>
                                 <li><a class="nav-link" href="#"><spring:message code="title.shopping.cellphone"/></a></li>
                                 <li><a class="nav-link" href="#"><spring:message code="title.shopping.food"/></a></li>
-                            </ul>
-                        </li>
-
-                        <!-- 個人專區 -->
-                        <li class="nav-item">
-                            <a class="nav-link" href="#personMenu" data-toggle="collapse" aria-expanded="false"><spring:message code="title.profile"/></a>
-                            <ul class="collapse list-unstyled" id="personMenu">
-                                <%--<li><a class="nav-link" href="<c:url value="/ticket/list" />"><spring:message code="nav.item.list.tickets" /></a></li>--%>
-                                <%--<li><a class="nav-link" href="<c:url value="/ticket/search" />"><spring:message code="nav.item.search.tickets" /></a></li>--%>
-                                <%--<li><a class="nav-link" href="<c:url value="/ticket/create" />"><spring:message code="nav.item.create.ticket" /></a></li>--%>
-                                <%--<li><a class="nav-link" href="javascript:void 0;"--%>
-                                       <%--onclick="newChat();"><spring:message code="nav.item.chat.support" /></a></li>--%>
-                                <%--<li><a class="nav-link" href="<c:url value="/chat/list" />"><spring:message code="nav.item.view.chat" /></a></li>--%>
-                                <%--<li><a class="nav-link" href="<c:url value="/session/list" />"><spring:message code="nav.item.list.session" /></a></li>--%>
-                                <%--<li><a class="nav-link" href="<c:url value="/profile" />"><spring:message code="nav.item.list.profile" /></a></li>--%>
-                                <%--<li><a class="nav-link" href="<c:url value="/logout" />"><spring:message code="nav.item.logout" /></a></li>--%>
                             </ul>
                         </li>
                     </ul>

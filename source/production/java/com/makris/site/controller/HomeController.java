@@ -24,16 +24,14 @@ public class HomeController {
 
     // JSP page name
     private static final String JSP_HOME = "home";
-    private static final String JSP_LOGIN ="login";
 
     @Inject
     AuthenticationService authenticationService;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public ModelAndView home(Map<String, Object> model, HttpSession session){
-        logger.debug("get home");
+    public ModelAndView home(Map<String, Object> model){
 
-        model.put("loginFailed", false);
+        model.put("loginFailed",true);
         model.put("loginForm", new LoginForm());
         model.put("registerForm", new RegisterForm());
         return new ModelAndView(JSP_HOME);
@@ -70,8 +68,31 @@ public class HomeController {
             return new ModelAndView(JSP_HOME);
         }
 
+        // login successfully
         UserPrincipal.setPrincipal(session, customer);
         request.changeSessionId();
+        model.put("userName", customer.getName());
+        model.put("loginFailed", false);
+        model.put("loginForm", new LoginForm());
+        model.put("registerForm", new RegisterForm());
+        return new ModelAndView(JSP_HOME);
+    }
+
+    @RequestMapping(value = "logout", method = RequestMethod.GET)
+    public ModelAndView logout(Map<String, Object> model, HttpSession session){
+        UserPrincipal customer = (UserPrincipal)session.getAttribute(UserPrincipal.SESSION_ATTRIBUTE_KEY);
+        if (customer != null){
+            UserPrincipal.removePrincipal(session, customer);
+
+            // logout successfully
+            model.put("loginFailed", true);
+        }else{
+            // logout fail
+            model.put("loginFailed", false);
+
+        }
+        model.put("loginForm", new LoginForm());
+        model.put("registerForm", new RegisterForm());
         return new ModelAndView(JSP_HOME);
     }
 
@@ -109,15 +130,22 @@ public class HomeController {
             UserPrincipal.setPrincipal(session, customer);
             request.changeSessionId();
 
+            model.put("userName", customer.getName());
             model.put("loginForm", null);
             model.put("registerForm", null);
             model.put("loginFailed", false);
         }
+
+        // register failed
+        model.put("loginForm", new LoginForm());
+        model.put("registerForm", form);
+        model.put("loginFailed", true);
+
         return new ModelAndView(JSP_HOME);
     }
 
     public ModelAndView getHomeRedirect(){
-        return new ModelAndView(new RedirectView("/home", true, false));
+        return new ModelAndView(new RedirectView("/", true, false));
     }
 
     public static class LoginForm

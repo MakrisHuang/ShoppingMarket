@@ -10,6 +10,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <spring:message code="title.home" var="homeTitle" />
 <template:main htmlTitle="${homeTitle}" bodyTitle="${homeTitle}">
+    <script>
+        // perform GET to retrieve shopping items
+        // with AngularJS
+
+    </script>
     <section class="row text-center placeholders">
         <div class="col-6 col-sm-3 placeholder">
             <img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
