@@ -6,11 +6,10 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<head>
-    <title>Title</title>
-</head>
-<body>
+<spring:message code="title.profile.orders" var="ordersTitle"/>
+<template:main htmlTitle="${ordersTitle}" bodyTitle="${ordersTitle}">
+    <script>
+        // perform GET to retrieve orders with AngularJS
+    </script>
 
-</body>
-</html>
+</template:main>
