@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.time.Instant;
 import java.util.List;
 
 @RestEndpoint
@@ -116,6 +117,7 @@ public class OrderRestEndPoint {
                 order.setItems(form.getShoppingItems());
                 order.setPrice(form.getPrice());
                 order.setStatus(form.getStatus());
+                order.setDateCreated(Instant.now());
 
                 this.orderService.save(order);
 

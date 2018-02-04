@@ -10,6 +10,11 @@
 <template:main htmlTitle="${ordersTitle}" bodyTitle="${ordersTitle}">
     <script>
         // perform GET to retrieve orders with AngularJS
+        var app = angular.module('orders', []);
+
+        app.controller('OrdersController', ['$http', '$log', function($http, $log){
+
+        }]);
     </script>
 
 </template:main>

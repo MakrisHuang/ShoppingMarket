@@ -71,8 +71,8 @@
                                         <spring:message code="title.profile" />
                                     </a>
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" href="#"><spring:message code="title.profile.basic"/></a>
-                                        <a class="dropdown-item" href="#"><spring:message code="title.profile.orders" /></a>
+                                        <a class="dropdown-item" href="<c:url value="/profile"/>"><spring:message code="title.profile.basic"/></a>
+                                        <a class="dropdown-item" href="<c:url value="/orders" />"><spring:message code="title.profile.orders" /></a>
                                     </div>
                                 </li>
                             </c:otherwise>
