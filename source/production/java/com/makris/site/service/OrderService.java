@@ -3,8 +3,6 @@ package com.makris.site.service;
 import com.makris.site.entities.Order;
 import com.makris.site.entities.ShoppingItem;
 import com.makris.site.entities.UserPrincipal;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
@@ -20,7 +18,7 @@ public interface OrderService {
     void save(@Valid Order order);
     void deleteOrder(long orderId);
 
-    Page<ShoppingItem> getShoppingItems(long orderId, Pageable page);
+//    Page<ShoppingItem> getShoppingItems(long shoppingItemId, Pageable page);
     void saveShoppingItem(@Valid ShoppingItem shoppingItem, long orderId);
     void deleteShoppingItem(long shoppingItemId);
 }

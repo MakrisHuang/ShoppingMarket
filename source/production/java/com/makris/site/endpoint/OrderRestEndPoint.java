@@ -2,7 +2,10 @@ package com.makris.site.endpoint;
 
 import com.makris.config.annotation.RestEndpoint;
 import com.makris.exception.ResourceNotFoundException;
-import com.makris.site.entities.*;
+import com.makris.site.entities.Order;
+import com.makris.site.entities.OrderWebServiceList;
+import com.makris.site.entities.ShoppingItem;
+import com.makris.site.entities.UserPrincipal;
 import com.makris.site.service.OrderService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,10 +18,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import java.util.List;
-import java.util.Map;
 
 @RestEndpoint
 public class OrderRestEndPoint {
@@ -27,15 +29,14 @@ public class OrderRestEndPoint {
     @Inject
     OrderService orderService;
 
-    @RequestMapping(value = "order", method = RequestMethod.OPTIONS)
+    @RequestMapping(value = "orders", method = RequestMethod.OPTIONS)
     public ResponseEntity<Void> discover(){
-        logger.debug("order in options");
         HttpHeaders headers = new HttpHeaders();
         headers.add("Allow", "OPTIONS,HEAD,GET,POST");
         return new ResponseEntity<>(null, headers, HttpStatus.NO_CONTENT);
     }
 
-    @RequestMapping(value = "order/{id}", method = RequestMethod.OPTIONS)
+    @RequestMapping(value = "orders/{id}", method = RequestMethod.OPTIONS)
     public ResponseEntity<Void> discover(@PathVariable("id") long id){
         // need to check user session
         if (this.orderService.getOrder(id) == null){
@@ -47,9 +48,21 @@ public class OrderRestEndPoint {
     }
 
     /*
+        顯示單一筆訂單
+     */
+    @RequestMapping(value = "orders/{id}", method = RequestMethod.GET)
+    public Order showOrder(@PathVariable("id") long id){
+        Order order = this.orderService.getOrder(id);
+        if (order == null){
+            throw new ResourceNotFoundException();
+        }
+        return order;
+    }
+
+    /*
         顯示所有訂單
      */
-    @RequestMapping(value = "order", method = RequestMethod.GET)
+    @RequestMapping(value = "orders", method = RequestMethod.GET)
     @ResponseBody @ResponseStatus(HttpStatus.OK)
     public OrderWebServiceList getOrders(HttpServletRequest request){
         HttpSession session = request.getSession();
@@ -64,43 +77,59 @@ public class OrderRestEndPoint {
     /*
         從Session獲取購物車內的商品
     */
-    @RequestMapping(value = "order/cart", method = RequestMethod.GET)
-    public Cart showCart(Map<String, Object> model, HttpServletRequest request){
-        HttpSession session = request.getSession();
-        if (session.getAttribute(Cart.CART_IDENTIFIER) == null){
-            return new Cart();
-        }
-        Cart cart = (Cart)session.getAttribute(Cart.CART_IDENTIFIER);
-        cart.calculateTotalPrice();
-        return cart;
-    }
+//    @RequestMapping(value = "orders/cart", method = RequestMethod.GET)
+//    public Cart showCart(Map<String, Object> model, HttpServletRequest request){
+//        HttpSession session = request.getSession();
+//        if (session.getAttribute(Cart.CART_IDENTIFIER) == null){
+//            return new Cart();
+//        }
+//        Cart cart = (Cart)session.getAttribute(Cart.CART_IDENTIFIER);
+//        cart.calculateTotalPrice();
+//        return cart;
+//    }
 
 
     /*
         送出訂單，若成功，回傳訂單內容
      */
-    @RequestMapping(value = "order/new", method = RequestMethod.POST)
+    @RequestMapping(value = "orders/new", method = RequestMethod.POST)
+    @ResponseBody
     public ResponseEntity<Order> create(@RequestBody OrderForm form,
                                         HttpServletRequest request){
         Order order = new Order();
 
         HttpSession session = request.getSession();
+
+        // 從session pool中獲取customer的password
         UserPrincipal customer = (UserPrincipal)session.getAttribute(UserPrincipal.SESSION_ATTRIBUTE_KEY);
-        if (customer != null) {
-            order.setCustomer(customer); // get user info from session
-            order.setItems(form.getShoppingItems());
-            order.setPrice(form.getPrice());
-            order.setStatus(form.getStatus());
+        try{
+            String customerUsername = customer.getUsername();
+            String customerEmail = customer.getEmail();
 
-            this.orderService.save(order);
+            // 從request body獲取client端的username和password
+            String clientUsername = form.getCustomer();
+            String clientEmail = form.getEmail();
 
-            String uri = ServletUriComponentsBuilder.
-                    fromCurrentServletMapping().path("/order/{id}").buildAndExpand(order.getId()).toString();
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Location", uri);
-            return new ResponseEntity<>(order, headers, HttpStatus.CREATED);
-        }else{
-            return new ResponseEntity<>(new Order(), null, HttpStatus.NOT_MODIFIED);
+            if (customerUsername == clientUsername && customerEmail == clientEmail) {
+                // 身份驗證通過，可建立訂單
+                order.setCustomer(customer); // get user info from session
+                order.setItems(form.getShoppingItems());
+                order.setPrice(form.getPrice());
+                order.setStatus(form.getStatus());
+
+                this.orderService.save(order);
+
+                String uri = ServletUriComponentsBuilder.
+                        fromCurrentServletMapping().path("/order/{id}").buildAndExpand(order.getId()).toString();
+                HttpHeaders headers = new HttpHeaders();
+                headers.add("Location", uri);
+                return new ResponseEntity<>(order, headers, HttpStatus.CREATED);
+            }else{
+                // 身份驗證失敗，需回傳失敗訊息
+                return new ResponseEntity<>(order, null, HttpStatus.OK);
+            }
+        } catch (NullPointerException e){
+            return new ResponseEntity<>(null, null, HttpStatus.NOT_MODIFIED);
         }
     }
 
@@ -109,6 +138,7 @@ public class OrderRestEndPoint {
         private Integer price;
         private String status;
         private String customer;
+        private String email;
         private List<ShoppingItem> shoppingItems;
 
         public Integer getPrice() {
@@ -135,7 +165,15 @@ public class OrderRestEndPoint {
             this.customer = customer;
         }
 
-        @XmlTransient
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        @XmlElement(name = "shoppingItems")
         public List<ShoppingItem> getShoppingItems() {
             return shoppingItems;
         }
@@ -144,5 +182,6 @@ public class OrderRestEndPoint {
             this.shoppingItems = shoppingItems;
         }
     }
+
 
 }

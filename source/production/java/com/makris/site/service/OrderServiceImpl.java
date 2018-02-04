@@ -4,8 +4,7 @@ import com.makris.site.entities.Order;
 import com.makris.site.entities.ShoppingItem;
 import com.makris.site.entities.UserPrincipal;
 import com.makris.site.repositories.OrderRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import com.makris.site.repositories.ShoppingItemRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +15,8 @@ import java.util.List;
 @Service
 public class OrderServiceImpl implements OrderService{
     @Inject OrderRepository orderRepository;
-//    @Inject ShoppingItemRepository shoppingItemRepository;
+    @Inject
+    ShoppingItemRepository shoppingItemRepository;
 
     @Override
     @Transactional
@@ -45,12 +45,6 @@ public class OrderServiceImpl implements OrderService{
         this.orderRepository.delete(orderId);
     }
 
-    @Override
-    @Transactional
-    public Page<ShoppingItem> getShoppingItems(long orderId, Pageable page) {
-//        return this.shoppingItemRepository.findByOrderId(orderId, page);
-        return null;
-    }
 
     @Override
     @Transactional
