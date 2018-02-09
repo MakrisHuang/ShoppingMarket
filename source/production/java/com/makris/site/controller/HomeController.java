@@ -158,7 +158,7 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/orders", method = RequestMethod.GET)
-    public String orders(Map<String, Object> model, HttpServletRequest request){
+    public ModelAndView orders(Map<String, Object> model, HttpServletRequest request){
         HttpSession session = request.getSession();
 
         UserPrincipal customer = (UserPrincipal) session.getAttribute(UserPrincipal.SESSION_ATTRIBUTE_KEY);
@@ -171,7 +171,7 @@ public class HomeController {
         model.put("loginForm", new LoginForm());
         model.put("registerForm", new RegisterForm());
         // need to send session?
-        return JSP_ORDERS;
+        return new ModelAndView(JSP_ORDERS);
     }
 
     @RequestMapping(value = "/profile", method = RequestMethod.GET)

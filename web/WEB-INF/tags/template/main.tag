@@ -12,7 +12,7 @@
 <%@ attribute name="registerFragment" fragment="true" required="false" %>
 <%@ include file="/WEB-INF/jsp/base.jspf" %>
 <!DOCTYPE html>
-<html ng-app>
+<html ng-app="Store">
     <head>
         <title><spring:message code="title.customer.support" /> ::
             <c:out value="${fn:trim(htmlTitle)}" /></title>
@@ -34,9 +34,10 @@
         <link rel="stylesheet" href="<c:url value="/resource/stylesheet/dashboard.css" />" />
 
         <script type="text/javascript" lang="javascript">
-
+            var app = angular.module('Store', ['store-orders']);
 
         </script>
+        <script src="<c:url value="/resource/js/orders.js"/>"></script>
     </head>
     <body>
         <header>
@@ -191,7 +192,6 @@
                 </nav>
 
                 <main role="main" class="col-sm-9 ml-sm-auto col-md-10 pt-3">
-                    <!-- do shopping item jsp -->
                     <jsp:doBody/>
                 </main>
             </div>
