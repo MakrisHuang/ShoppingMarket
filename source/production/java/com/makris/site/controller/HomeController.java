@@ -27,16 +27,24 @@ public class HomeController {
     private static final String JSP_ORDERS = "profile/orders";
     private static final String JSP_PROFILE = "profile/profile";
 
-    private static final String ATTR_FORM_LOGIN = "loginForm";
-    private static final String ATTR_FORM_REGISTER = "registerForm";
+    private static final String ATTR_FORM_LOGIN     = "loginForm";
+    private static final String ATTR_FORM_REGISTER  = "registerForm";
+    private static final String ATTR_USERNAME       = "userName";
 
     @Inject
     AuthenticationService authenticationService;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public ModelAndView home(Map<String, Object> model){
-
-        model.put("loginFailed",true);
+    public ModelAndView home(Map<String, Object> model, HttpSession session){
+        // 檢查、保持登入狀態
+        UserPrincipal customer = (UserPrincipal) UserPrincipal.getPrincipal(session);
+        if (customer != null){
+            model.put("loginFailed", false);
+            model.put(ATTR_USERNAME, customer.getUsername());
+        }
+        else {
+            model.put("loginFailed", true);
+        }
         model.put(ATTR_FORM_LOGIN, new LoginForm());
         model.put(ATTR_FORM_REGISTER, new RegisterForm());
         return new ModelAndView(JSP_HOME);
@@ -76,11 +84,11 @@ public class HomeController {
         // login successfully
         UserPrincipal.setPrincipal(session, customer);
         request.changeSessionId();
-        model.put("userName", customer.getName());
+        model.put(ATTR_USERNAME, customer.getUsername());
         model.put("loginFailed", false);
         model.put(ATTR_FORM_LOGIN, new LoginForm());
         model.put(ATTR_FORM_REGISTER, new RegisterForm());
-        return new ModelAndView(JSP_HOME);
+        return getHomeRedirect();
     }
 
     @RequestMapping(value = "logout", method = RequestMethod.GET)
@@ -98,7 +106,7 @@ public class HomeController {
         }
         model.put(ATTR_FORM_LOGIN, new LoginForm());
         model.put(ATTR_FORM_REGISTER, new RegisterForm());
-        return new ModelAndView(JSP_HOME);
+        return getHomeRedirect();
     }
 
     @RequestMapping(value = "register", method = RequestMethod.POST)
@@ -146,7 +154,7 @@ public class HomeController {
         model.put("registerForm", form);
         model.put("loginFailed", true);
 
-        return new ModelAndView(JSP_HOME);
+        return getHomeRedirect();
     }
 
     @RequestMapping(value = "/orders", method = RequestMethod.GET)
@@ -163,16 +171,18 @@ public class HomeController {
         model.put("loginForm", new LoginForm());
         model.put("registerForm", new RegisterForm());
         // need to send session?
-        return "profile/orders";
+        return JSP_ORDERS;
     }
 
     @RequestMapping(value = "/profile", method = RequestMethod.GET)
     public String profile(){
-        return "profile/profile";
+        return JSP_PROFILE;
     }
 
     public ModelAndView getHomeRedirect(){
-        return new ModelAndView(new RedirectView("/", true, false));
+        RedirectView redirectView = new RedirectView("/", false, false);
+        redirectView.setExposeModelAttributes(false);
+        return new ModelAndView(redirectView);
     }
 
     public static class LoginForm
