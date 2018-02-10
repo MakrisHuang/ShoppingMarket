@@ -8,6 +8,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <spring:message code="title.profile.orders" var="ordersTitle"/>
 <template:main htmlTitle="${ordersTitle}" bodyTitle="${ordersTitle}">
+    <script src="<c:url value="/resource/js/controllers/controller_orders.js"/>"></script>
+
     <section ng-controller="OrdersController as ordersCtrl">
         <table class="table table-striped">
             <thead>

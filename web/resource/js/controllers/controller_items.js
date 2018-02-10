@@ -2,6 +2,7 @@ var app = angular.module('store-items', []);
 
 app.controller('ShoppingItemController', ['$scope', '$http', '$log', function ($scope, $http, $log) {
     $scope.shoppingItems = [
+
     ];
 
     $scope.fetchShoppingItems = function (page, category, size) {
@@ -20,4 +21,8 @@ app.controller('ShoppingItemController', ['$scope', '$http', '$log', function ($
 
     // load default shopping items
     $scope.fetchShoppingItems(0, "3c", 3);
+
+    $scope.addToCart = function(itemId){
+
+    };
 }]);

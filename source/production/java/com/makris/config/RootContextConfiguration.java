@@ -83,7 +83,7 @@ public class RootContextConfiguration implements
         messageSource.setBasenames(
                 "/WEB-INF/i18n/titles", "/WEB-INF/i18n/messages",
                 "/WEB-INF/i18n/errors", "/WEB-INF/i18n/validation",
-                "/WEB-INF/i18n/orders"
+                "/WEB-INF/i18n/orders", "/WEB-INF/i18n/cart"
         );
         return messageSource;
     }
