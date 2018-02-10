@@ -24,7 +24,7 @@ import java.time.Instant;
 import java.util.List;
 
 @RestEndpoint
-public class OrderRestEndPoint {
+public class OrdersRestEndPoint {
     private static final Logger logger = LogManager.getLogger();
 
     @Inject

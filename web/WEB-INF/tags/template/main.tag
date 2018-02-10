@@ -34,7 +34,7 @@
         <link rel="stylesheet" href="<c:url value="/resource/stylesheet/dashboard.css" />" />
 
         <script type="text/javascript" lang="javascript">
-            var app = angular.module('Store', ['store-orders']);
+            var app = angular.module('Store', ['store-orders', 'store-items']);
 
         </script>
         <script src="<c:url value="/resource/js/orders.js"/>"></script>
@@ -176,16 +176,16 @@
         </header>
 
         <div class="container-fluid">
-            <div class="row">
+            <div class="row" ng-controller="ShoppingItemController as itemCtrl">
                 <nav class="col-sm-3 col-md-2 d-none d-sm-block bg-light sidebar">
                     <ul class="nav nav-pills flex-column">
                         <!-- 商品專區 -->
                         <li class="nav-item">
                             <a class="nav-link" href="#homeSubmenu" data-toggle="collapse" aria-expanded="false"><spring:message code="title.shopping"/></a>
                             <ul class="collapse list-unstyled" id="homeSubmenu">
-                                <li><a class="nav-link" href="#"><spring:message code="title.shopping.3C"/></a></li>
-                                <li><a class="nav-link" href="#"><spring:message code="title.shopping.cellphone"/></a></li>
-                                <li><a class="nav-link" href="#"><spring:message code="title.shopping.food"/></a></li>
+                                <li><a class="nav-link" href="#" ng-click="fetchShoppingItems(0, '3c', 3)"><spring:message code="title.shopping.3C"/></a></li>
+                                <li><a class="nav-link" href="#" ng-click="fetchShoppingItems(0, 'hair dryers', 3)"><spring:message code="title.shopping.cellphone"/></a></li>
+                                <li><a class="nav-link" href="#" ng-click="fetchShoppingItems(0, 'tv', 3)"><spring:message code="title.shopping.tv"/></a></li>
                             </ul>
                         </li>
                     </ul>

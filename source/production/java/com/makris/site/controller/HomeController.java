@@ -23,9 +23,7 @@ public class HomeController {
     private static final Logger logger = LogManager.getLogger();
 
     // JSP page name
-    private static final String JSP_HOME = "home";
-    private static final String JSP_ORDERS = "profile/orders";
-    private static final String JSP_PROFILE = "profile/profile";
+    private static final String JSP_HOME = "/shopping/items";
 
     private static final String ATTR_FORM_LOGIN     = "loginForm";
     private static final String ATTR_FORM_REGISTER  = "registerForm";
@@ -155,28 +153,6 @@ public class HomeController {
         model.put("loginFailed", true);
 
         return getHomeRedirect();
-    }
-
-    @RequestMapping(value = "/orders", method = RequestMethod.GET)
-    public ModelAndView orders(Map<String, Object> model, HttpServletRequest request){
-        HttpSession session = request.getSession();
-
-        UserPrincipal customer = (UserPrincipal) session.getAttribute(UserPrincipal.SESSION_ATTRIBUTE_KEY);
-        if (customer == null){
-            model.put("loginFailed", true);
-        }else{
-            model.put("userName", customer.getName());
-            model.put("loginFailed", false);
-        }
-        model.put("loginForm", new LoginForm());
-        model.put("registerForm", new RegisterForm());
-        // need to send session?
-        return new ModelAndView(JSP_ORDERS);
-    }
-
-    @RequestMapping(value = "/profile", method = RequestMethod.GET)
-    public String profile(){
-        return JSP_PROFILE;
     }
 
     public ModelAndView getHomeRedirect(){
