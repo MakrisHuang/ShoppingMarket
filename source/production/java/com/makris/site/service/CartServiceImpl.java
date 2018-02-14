@@ -22,39 +22,42 @@ public class CartServiceImpl implements CartService{
 
     @Override
     @Transactional
-    public void addItemToCart(UserPrincipal customer, ShoppingItem shoppingItem) {
-        Cart cart = this.cartRepository.findByCustomer(customer);
-
+    public Cart addItemToCart(Cart cart,
+                              ShoppingItem shoppingItem) {
         CartItem cartItem = new CartItem();
         cartItem.setShoppingItem(shoppingItem);
         cartItem.setAmount(1);
 
         cart.addCartItem(cartItem);
         this.cartRepository.save(cart);
+
+        return cart;
     }
 
     @Override
     @Transactional
-    public void updateItemAmount(UserPrincipal customer,
+    public Cart updateItemAmount(Cart cart,
                                  ShoppingItem shoppingItem,
                                  Integer newAmount) {
-        Cart cart = this.cartRepository.findByCustomer(customer);
         CartItem cartItem = new CartItem();
         cartItem.setShoppingItem(shoppingItem);
 
         cart.updateCartItemAmount(cartItem, newAmount);
         this.cartRepository.save(cart);
+
+        return cart;
     }
 
     @Override
     @Transactional
-    public void removeItem(UserPrincipal customer,
+    public Cart removeItem(Cart cart,
                            ShoppingItem shoppingItem) {
-        Cart cart = this.cartRepository.findByCustomer(customer);
         CartItem cartItem = new CartItem();
         cartItem.setShoppingItem(shoppingItem);
 
         cart.removeCartItem(cartItem);
         this.cartRepository.save(cart);
+
+        return cart;
     }
 }

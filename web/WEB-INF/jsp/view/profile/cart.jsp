@@ -7,9 +7,9 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <spring:message code="title.home" var="homeTitle" />
-<template:main htmlTitle="${homeTitle}" bodyTitle="${homeTitle}">
-    <script src="<c:url value="/resource/js/controllers/controller_cart.js"/>"></script>
+<%--@elvariable id="cart" type="com.makris.site.entities.Cart" --%>
 
+<template:main htmlTitle="${homeTitle}" bodyTitle="${homeTitle}">
     <section ng-controller="CartController">
         <table class="table table-striped">
             <thead>
@@ -27,11 +27,14 @@
                     <td>{{item.itemName}}</td>
                     <td>{{item.availableStatus}}</td>
                     <td>{{item.price}}</td>
-                    <td>{{item.amount}}</td>
+                    <td>
+                        <span class="glyphicon glyphicon-plus-sign" ng-click="increaseAmount(orderedItem)"></span>
+                            {{item.amount}}
+                        <span class="glyphicon glyphicon-minus-sign" ng-click="decreaseAmount(orderedItem, $index)"></span>
+                    </td>
                     <td>{{item.price * item.amount}}</td>
                     <td>
-                        <button class="btn btn-info btn-sm"><spring:message code="cart.buyNext"/></button>
-                        <button class="btn btn-danger btn-sm"><spring:message code="cart.cancel"/></button>
+                        <button class="btn btn-danger btn-sm" ng-click="removeItemInCart(item)"><spring:message code="cart.cancel"/></button>
                     </td>
                 </tr>
             </tbody>

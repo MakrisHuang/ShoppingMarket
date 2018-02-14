@@ -6,10 +6,10 @@ import com.makris.site.entities.UserPrincipal;
 
 public interface CartService {
     Cart findCartByCustomer(UserPrincipal customer);
-    void addItemToCart(UserPrincipal customer, ShoppingItem shoppingItem);
-    void updateItemAmount(UserPrincipal customer,
+    Cart addItemToCart(Cart cart, ShoppingItem shoppingItem);
+    Cart updateItemAmount(Cart cart,
                           ShoppingItem shoppingItem,
                           Integer newAmount);
-    void removeItem(UserPrincipal customer,
+    Cart removeItem(Cart cart,
                     ShoppingItem shoppingItem);
 }

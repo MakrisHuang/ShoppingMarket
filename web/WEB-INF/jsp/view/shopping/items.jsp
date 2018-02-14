@@ -8,8 +8,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <spring:message code="title.home" var="homeTitle" />
 <template:main htmlTitle="${homeTitle}" bodyTitle="${homeTitle}">
-    <script src="<c:url value="/resource/js/controllers/controller_items.js"/>"></script>
-
     <section class="row text-center placeholders">
         <div class="col-6 col-sm-3 placeholder" ng-repeat="item in shoppingItems">
             <img ng-src="{{'data:image/jpeg;base64,' + item.image}}" width="200" height="200"
