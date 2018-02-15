@@ -5,6 +5,7 @@ import com.makris.config.annotation.RestEndpoint;
 import com.makris.exception.ShoppingItemNotFoundException;
 import com.makris.site.entities.ShoppingItem;
 import com.makris.site.service.ShoppingService;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -33,6 +34,7 @@ public class ShoppingItemsRestEndpoint {
         return this.shoppingService.getShoppingItems(category, pageable);
     }
 
+    @Cacheable(value = "shoppingItemCache", key = "#result.id")
     @RequestMapping(value = "shopping/{id}", method = RequestMethod.GET)
     @ResponseBody @ResponseStatus(HttpStatus.OK)
     public ShoppingItem getShoppingItemsWithId(@PathVariable(value = "id") int id){

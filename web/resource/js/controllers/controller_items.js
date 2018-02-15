@@ -11,7 +11,7 @@ angular.module('Store', [])
             return $http({
                 method: 'POST',
                 url: '/services/Rest/cart',
-                headers: {'Content-Type': 'application/json', 'charset': 'utf-8'},
+                headers: {'Content-Type': 'application/json'},
                 data: $.param(param)}
             ).then(
                 function (response) {
@@ -85,7 +85,6 @@ angular.module('Store', [])
     $scope.fetchShoppingItems(0, "3c", 3);
 
     $scope.addItemToCart = function (item) {
-        console.log("fire");
         $scope.cartHelper.addToCart(item);
     };
 }]);

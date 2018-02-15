@@ -1,6 +1,6 @@
 package com.makris.site.controller;
 
-import com.makris.config.annotation.WebController;
+import com.makris.config.annotation.RestEndpoint;
 import com.makris.site.entities.Cart;
 import com.makris.site.entities.ShoppingItem;
 import com.makris.site.entities.UserPrincipal;
@@ -8,15 +8,13 @@ import com.makris.site.service.CartService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.validation.constraints.NotNull;
 import java.util.Map;
 
-@WebController
+@RestEndpoint
 public class CartController {
 
     @Inject
@@ -26,22 +24,36 @@ public class CartController {
 
     private static final String JSP_CART = "/profile/cart";
 
-    @RequestMapping(value = "cart")
-    public ModelAndView viewCart(Map<String, Object> model,
-                                 HttpServletRequest request){
-        return new ModelAndView(JSP_CART);
-    }
+//    @RequestMapping(value = "cart")
+//    public ModelAndView viewCart(Map<String, Object> model,
+//                                 HttpServletRequest request){
+//        return new ModelAndView(JSP_CART);
+//    }
 
-    @RequestMapping(value = "cart", method = RequestMethod.POST)
+    @RequestMapping(value = "cart", method = RequestMethod.POST, consumes = "application/json")
     @ResponseBody
-    public Cart cartHandling(@ModelAttribute @NotNull ShoppingItem shoppingItem,
-                             @RequestParam Map<String, Object> param,
+    public Cart cartHandling(@RequestBody Map<String, Object> param,
                              HttpServletRequest request){
         HttpSession session = request.getSession();
         UserPrincipal customer = (UserPrincipal)session.getAttribute(UserPrincipal.SESSION_ATTRIBUTE_KEY);
 
         String action = (String)param.get("action");
-        logger.debug(param);
+
+        logger.info(param);
+        logger.info(param.get("shoppingItem"));
+
+//        logger.info(content);
+
+        ShoppingItem shoppingItem = new ShoppingItem();
+//        shoppingItem.setId((long)content.get("id"));
+//        shoppingItem.setCategory((String)content.get("category"));
+//        shoppingItem.setDescription((String)content.get("description"));
+//        shoppingItem.setName((String)content.get("name"));
+//        shoppingItem.setPrice((Integer)content.get("price"));
+//        shoppingItem.setImage((byte[])content.get("image"));
+
+        logger.info(shoppingItem);
+
         Cart cart = this.cartService.findCartByCustomer(customer);
         if (cart == null) cart = new Cart();
 
