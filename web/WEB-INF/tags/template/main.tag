@@ -33,8 +33,10 @@
         <%--<link rel="stylesheet" href="<c:url value="/resource/stylesheet/main.css" />" />--%>
         <link rel="stylesheet" href="<c:url value="/resource/stylesheet/dashboard.css" />" />
 
+        <script src="/resource/js/app.js"></script>
+
         <!-- services -->
-        <script src="<c:url value="/resource/js/services/cartHelper.js"/>"></script>
+        <%--<script src="<c:url value="/resource/js/services/cartHelper.js"/>"></script>--%>
 
         <%--controller--%>
         <script src="<c:url value="/resource/js/controllers/controller_cart.js"/>"></script>
@@ -42,7 +44,7 @@
         <script src="<c:url value="/resource/js/controllers/controller_items.js"/>"></script>
 
         <script type="text/javascript" lang="javascript">
-            var app = angular.module('Store', ['store-orders', 'store-items', 'store-cart']);
+
         </script>
     </head>
     <body>

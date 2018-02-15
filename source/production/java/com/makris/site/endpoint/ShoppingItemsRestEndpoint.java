@@ -1,6 +1,8 @@
 package com.makris.site.endpoint;
 
+import com.makris.Error;
 import com.makris.config.annotation.RestEndpoint;
+import com.makris.exception.ShoppingItemNotFoundException;
 import com.makris.site.entities.ShoppingItem;
 import com.makris.site.service.ShoppingService;
 import org.springframework.data.domain.Page;
@@ -25,6 +27,9 @@ public class ShoppingItemsRestEndpoint {
         @RequestParam(value = "size", required = false) int size){
         Sort sort = new Sort(Sort.Direction.ASC, "id");
         Pageable pageable = new PageRequest(page, size, sort);
+        if (pageable == null){
+            throw new ShoppingItemNotFoundException();
+        }
         return this.shoppingService.getShoppingItems(category, pageable);
     }
 
@@ -32,7 +37,16 @@ public class ShoppingItemsRestEndpoint {
     @ResponseBody @ResponseStatus(HttpStatus.OK)
     public ShoppingItem getShoppingItemsWithId(@PathVariable(value = "id") int id){
         ShoppingItem item = this.shoppingService.getShoppingItem(id);
+        if (item == null){
+            throw new ShoppingItemNotFoundException(id);
+        }
         return item;
     }
 
+    @ExceptionHandler(ShoppingItemNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public @ResponseBody Error shoppingItemNotFound(ShoppingItemNotFoundException e){
+        long id = e.getShoppingItemId();
+        return new Error(4, "ShoppingItem [" + id + "] not found");
+    }
 }

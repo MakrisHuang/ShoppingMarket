@@ -1,6 +1,5 @@
-var app = angular.module('store-orders', []);
-
-app.controller('OrdersController', ['$http', '$log', function($http, $log){
+angular.module('Store', [])
+.controller('OrdersController', ['$http', '$log', function($http, $log){
     this.orders = [
         {
             "id": 123,

@@ -1,15 +1,12 @@
-var app = angular.module('store-cart', []);
+angular.module('Store', [])
+.controller('CartController', function ($scope, $http, CartHelper) {
+    $scope.cartHelper = CartHelper;
 
-app.controller('CartController', function ($scope, $http) {
-    // $scope.cartHelper = CartHelper;
-    //
-    // $scope.updateItemInCart = function (item) {
-    //     $scope.cartHelper.updateItemInCart(item);
-    // };
-    //
-    // $scope.removeItemInCart = function (item) {
-    //     $scope.cartHelper.removeItemInCart(item);
-    // };
+    $scope.updateItemInCart = function (item) {
+        $scope.cartHelper.updateItemInCart(item);
+    };
 
-
+    $scope.removeItemInCart = function (item) {
+        $scope.cartHelper.removeItemInCart(item);
+    };
 });
