@@ -5,14 +5,11 @@ angular.module('Store', [])
 
         addToCart: function(shoppingItem){
             var param = {
-                "action": "add",
-                "shoppingItem": shoppingItem
+                "action": "add"
+                // "shoppingItem": shoppingItem
             };
-            return $http({
-                method: 'POST',
-                url: '/services/Rest/cart',
-                headers: {'Content-Type': 'application/json'},
-                data: $.param(param)}
+            return $httpd.post('http://localhost:8080/services/Rest/cart',
+                $.param(param)
             ).then(
                 function (response) {
                     this.cart = response.data;
