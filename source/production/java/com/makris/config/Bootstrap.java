@@ -1,5 +1,6 @@
 package com.makris.config;
 
+import com.makris.config.cache.RedisCachingConfiguration;
 import com.makris.site.filter.AuthenticationFilter;
 import com.makris.site.filter.LoggingFilter;
 import com.makris.site.session.SessionListener;
@@ -18,6 +19,7 @@ public class Bootstrap implements WebApplicationInitializer
     {
         container.getServletRegistration("default").addMapping("/resource/*");
 
+        // 1
         AnnotationConfigWebApplicationContext rootContext =
                 new AnnotationConfigWebApplicationContext();
         rootContext.register(RootContextConfiguration.class);
@@ -36,6 +38,7 @@ public class Bootstrap implements WebApplicationInitializer
         ));
         dispatcher.addMapping("/");
 
+        // 2
         AnnotationConfigWebApplicationContext restContext =
                 new AnnotationConfigWebApplicationContext();
         restContext.register(RestServletContextConfiguration.class);
@@ -44,6 +47,11 @@ public class Bootstrap implements WebApplicationInitializer
         dispatcher = container.addServlet("springRestDispatcher", restServlet);
         dispatcher.setLoadOnStartup(2);
         dispatcher.addMapping("/services/Rest/*");
+
+        // 3. redis configuration
+        AnnotationConfigWebApplicationContext cacheContext =
+                new AnnotationConfigWebApplicationContext();
+        cacheContext.register(RedisCachingConfiguration.class);
 
         FilterRegistration.Dynamic registration = container.addFilter(
                 "loggingFilter", new LoggingFilter()

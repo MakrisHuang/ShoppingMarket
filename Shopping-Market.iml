@@ -28,6 +28,10 @@
           <dependency>fileset</dependency>
           <file>file://$MODULE_DIR$/source/production/java/com/makris/config/RestServletContextConfiguration.java</file>
         </fileset>
+        <fileset id="fileset4" name="Redis Context" removed="false">
+          <dependency>fileset</dependency>
+          <file>file://$MODULE_DIR$/source/production/java/com/makris/config/cache/RedisCachingConfiguration.java</file>
+        </fileset>
       </configuration>
     </facet>
     <facet type="jpa" name="JPA">

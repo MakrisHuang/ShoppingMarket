@@ -12,7 +12,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 @Configuration
 @EnableCaching
-public class RedisCachinConfiguration {
+public class RedisCachingConfiguration {
 
     @Bean
     public CacheManager cacheManager(RedisTemplate redisTemplate){
