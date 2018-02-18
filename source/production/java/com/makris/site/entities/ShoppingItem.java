@@ -2,10 +2,13 @@ package com.makris.site.entities;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
+import java.util.Map;
 
 @Entity
 @XmlRootElement(name = "shoppingItem")
@@ -99,4 +102,20 @@ public class ShoppingItem implements Serializable{
     public void setImage(byte[] image) {
         this.image = image;
     }
+
+    public ShoppingItem(Map<String, String> param) {
+        Logger logger = LogManager.getLogger();
+        logger.info(param);
+    }
+
+    public ShoppingItem(long id, String name, String category, String description, Integer price, byte[] image) {
+        this.id = id;
+        this.name = name;
+        this.category = category;
+        this.description = description;
+        this.price = price;
+        this.image = image;
+    }
+
+    public ShoppingItem() {}
 }

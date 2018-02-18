@@ -4,15 +4,11 @@ angular.module('Store', [])
         cart: [],
 
         addToCart: function(shoppingItem){
-            var data = {
-                "action": "add"
-                // "shoppingItem": shoppingItem
-            };
             return $http({
                 method: 'POST',
                 url: 'http://localhost:8080/services/Rest/cart',
                 headers: {'Content-Type':'application/json'},
-                data: data
+                data: shoppingItem
             }).then(
                 function (response) {
                     this.cart = response.data;
@@ -26,7 +22,6 @@ angular.module('Store', [])
 
         updateItemInCart: function (shoppingItem, newAmount) {
             var param = {
-                "action": "update",
                 "shoppingItem": shoppingItem,
                 "newAmount": newAmount
             };
@@ -42,11 +37,7 @@ angular.module('Store', [])
         },
 
         removeItemInCart: function (shoppingItem) {
-            var param = {
-                "action": "remove",
-                "shoppingItem": shoppingItem
-            };
-            return $http.post('/cart', param).then(
+            return $http.post('/cart', shoppingItem).then(
                 function (response) {
                     this.cart = response.data;
                 },

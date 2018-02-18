@@ -48,6 +48,7 @@ public class CartItem {
     }
 
     @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "ShoppingItemId")
     @XmlElement
     @JsonProperty
     public ShoppingItem getShoppingItem() {
