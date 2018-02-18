@@ -1,4 +1,4 @@
-package com.makris.site.controller;
+package com.makris.site.endpoint;
 
 import com.makris.config.annotation.RestEndpoint;
 import com.makris.site.entities.Cart;
@@ -15,7 +15,7 @@ import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 @RestEndpoint
-public class CartController {
+public class CartRestEndPoint {
 
     @Inject
     CartService cartService;
@@ -30,7 +30,7 @@ public class CartController {
 //        return new ModelAndView(JSP_CART);
 //    }
 
-    @RequestMapping(value = "cart", method = RequestMethod.POST, consumes = "application/json")
+    @RequestMapping(value = "cart", method = RequestMethod.POST)
     @ResponseBody
     public Cart cartHandling(@RequestBody Map<String, Object> param,
                              HttpServletRequest request){

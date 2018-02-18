@@ -1,4 +1,4 @@
-angular.module('Store', []).factory('CartHelper', function ($http){
+angular.module('Store', []).factory('CartHelper', function ($scope, $http){
     var service = {
         cart: [],
 
@@ -7,7 +7,7 @@ angular.module('Store', []).factory('CartHelper', function ($http){
                 "action": "add",
                 "shoppingItem": shoppingItem
             };
-            return $http.post('/cart', param).then(
+            return $http.post('/services/Rest/cart', param).then(
                 function (response) {
                     this.cart = response.data;
                 },
