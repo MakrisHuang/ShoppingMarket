@@ -32,6 +32,7 @@
         <!-- customized -->
         <%--<link rel="stylesheet" href="<c:url value="/resource/stylesheet/main.css" />" />--%>
         <link rel="stylesheet" href="<c:url value="/resource/stylesheet/dashboard.css" />" />
+        <link rel="stylesheet" href="<c:url value="/resource/stylesheet/open-iconic/font/css/open-iconic-bootstrap.css"/>"/>
 
         <script src="/resource/js/app.js"></script>
 
@@ -39,7 +40,7 @@
         <%--<script src="<c:url value="/resource/js/services/cartHelper.js"/>"></script>--%>
 
         <%--controller--%>
-        <script src="<c:url value="/resource/js/controllers/controller_cart.js"/>"></script>
+        <%--<script src="<c:url value="/resource/js/controllers/controller_cart.js"/>"></script>--%>
         <script src="<c:url value="/resource/js/controllers/controller_orders.js"/>"></script>
         <script src="<c:url value="/resource/js/controllers/controller_items.js"/>"></script>
 
@@ -82,6 +83,7 @@
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                         <a class="dropdown-item" href="<c:url value="/profile"/>"><spring:message code="title.profile.basic"/></a>
                                         <a class="dropdown-item" href="<c:url value="/orders" />"><spring:message code="title.profile.orders" /></a>
+                                        <a class="dropdown-item" href="<c:url value="/cart"/>"><spring:message code="title.profile.cart"/></a>
                                     </div>
                                 </li>
                             </c:otherwise>
@@ -184,8 +186,9 @@
         </header>
 
         <div class="container-fluid">
-            <div class="row" ng-controller="ShoppingItemController as itemCtrl">
-                <nav class="col-sm-3 col-md-2 d-none d-sm-block bg-light sidebar">
+            <div class="row">
+                <nav class="col-sm-3 col-md-2 d-none d-sm-block bg-light sidebar"
+                     ng-controller="ShoppingItemController as itemCtrl">
                     <ul class="nav nav-pills flex-column">
                         <!-- 商品專區 -->
                         <li class="nav-item">

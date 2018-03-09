@@ -1,0 +1,12 @@
+{
+  "id": 1,
+  "amount": 2,
+  "shoppingItem": {
+    "id": 1,
+    "name": "asus pc",
+    "category": "3c",
+    "description": "good",
+    "price": 300,
+    "image": "/jf3lsajg"
+  }
+}

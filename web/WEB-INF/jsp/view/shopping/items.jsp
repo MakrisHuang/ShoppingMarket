@@ -8,13 +8,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <spring:message code="title.home" var="homeTitle" />
 <template:main htmlTitle="${homeTitle}" bodyTitle="${homeTitle}">
-    <section class="row text-center placeholders">
+    <section class="row text-center placeholders" ng-controller="ShoppingItemController as itemCtrl">
         <div class="col-6 col-sm-3 placeholder" ng-repeat="item in shoppingItems">
             <img ng-src="{{'data:image/jpeg;base64,' + item.image}}" width="200" height="200"
                  class="img-fluid" alt="Generic placeholder thumbnail">
             <h4>{{item.name}}, \${{item.price}}</h4>
             <h5><a href="#">{{item.category}}</a></h5>
-            <button type="button" class="btn btn-info" ng-click="addItemToCart(item)">Add to Cart</button>
+            <button type="button" class="btn btn-info" ng-click="addItemToCart(item)"
+                    data-toggle="popover" title="Add to cart" data-content={{cartHelper.cart}}>Add to Cart</button>
             <div class="text-muted">{{item.description}}</div>
         </div>
     </section>

@@ -77,22 +77,47 @@ public class Cart implements Serializable{
         this.cartItems.add(cartItem);
     }
 
-    public void updateCartItemAmount(CartItem cartItem, Integer amount){
+    public void updateCartItemAmount(CartItem newCartItem){
         for (CartItem item:this.cartItems) {
-            if (item.getShoppingItem().getId() == cartItem.getShoppingItem().getId()){
+            if (item.getShoppingItem().getId() == newCartItem.getShoppingItem().getId()){
                 // find identical one, update the amount
-                item.setAmount(amount);
+                item.setAmount(newCartItem.getAmount());
                 this.cartItems.set(this.cartItems.indexOf(item), item);
+
+                // remove item if the amount is 0
+                if (newCartItem.getAmount() == 0){
+                    this.cartItems.remove(item);
+                }
+                return;
             }
         }
     }
 
-    public void removeCartItem(CartItem cartItem){
+    public void removeCartItem(ShoppingItem shoppingItem){
         for (CartItem item:this.cartItems) {
-            if (item.getShoppingItem().getId() == cartItem.getShoppingItem().getId()){
+            if (item.getShoppingItem().getId() == shoppingItem.getId()){
                 // find identical one, remove it
                 this.cartItems.remove(item);
+                return;
             }
         }
+    }
+
+    public boolean shoppingItemIsInCart(ShoppingItem shoppingItem){
+        for (CartItem item: this.cartItems){
+            if (item.getShoppingItem().getId() == shoppingItem.getId()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public CartItem findCartItemByShoppingItem(ShoppingItem shoppingItem){
+        for (CartItem item: this.cartItems){
+            if (item.getShoppingItem().getId() == shoppingItem.getId()){
+                return item;
+            }
+        }
+        return null;
     }
 }

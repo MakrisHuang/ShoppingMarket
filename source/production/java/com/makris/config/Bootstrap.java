@@ -53,6 +53,7 @@ public class Bootstrap implements WebApplicationInitializer
                 new AnnotationConfigWebApplicationContext();
         cacheContext.register(RedisCachingConfiguration.class);
 
+
         FilterRegistration.Dynamic registration = container.addFilter(
                 "loggingFilter", new LoggingFilter()
         );

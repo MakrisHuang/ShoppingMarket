@@ -2,6 +2,7 @@ package com.makris.site.endpoint;
 
 import com.makris.config.annotation.RestEndpoint;
 import com.makris.site.entities.Cart;
+import com.makris.site.entities.CartItem;
 import com.makris.site.entities.ShoppingItem;
 import com.makris.site.entities.UserPrincipal;
 import com.makris.site.service.CartService;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @RestEndpoint
+@ResponseBody
 public class CartRestEndPoint {
 
     @Inject
@@ -24,15 +26,26 @@ public class CartRestEndPoint {
 
     private static final Logger logger = LogManager.getLogger();
 
+    @RequestMapping(value = "cart/view", method = RequestMethod.GET)
+    public Cart viewCart(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        UserPrincipal customer = (UserPrincipal)session.getAttribute(UserPrincipal.SESSION_ATTRIBUTE_KEY);
+
+        if (customer != null){
+            return this.cartService.findCartByCustomer(customer);
+        }
+        return null;
+    }
+
+
     @RequestMapping(value = "cart/add", method = RequestMethod.POST)
-    @ResponseBody
     public Cart addItemToCart(@RequestBody ShoppingItem shoppingItem,
                              HttpServletRequest request){
         HttpSession session = request.getSession();
         UserPrincipal customer = (UserPrincipal)session.getAttribute(UserPrincipal.SESSION_ATTRIBUTE_KEY);
 
+        logger.info("[cart/add] shoppingItem: ");
         logger.info(shoppingItem);
-        logger.info(shoppingItem.getId());
 
         if (customer != null){
             Cart cart = this.cartService.findCartByCustomer(customer);
@@ -47,15 +60,39 @@ public class CartRestEndPoint {
         }
     }
 
+    @RequestMapping(value = "cart/update", method = RequestMethod.POST)
+    public Cart updateItemInCart(@RequestBody CartItem newCartItem,
+                           HttpServletRequest request){
+        HttpSession session = request.getSession();
+        UserPrincipal customer = (UserPrincipal)session.getAttribute(UserPrincipal.SESSION_ATTRIBUTE_KEY);
 
+        logger.info("[cart/update] cartItem: ");
+        logger.info(newCartItem.toString());
 
-    private Cart updateItemInCart(Cart cart,
-                                  ShoppingItem shoppingItem,
-                                  Integer newAmount){
-        return this.cartService.updateItemAmount(cart, shoppingItem, newAmount);
+        if (customer != null){
+            Cart cart = this.cartService.findCartByCustomer(customer);
+            cart = cartService.updateItemAmount(cart, newCartItem);
+            return cart;
+        }else{
+            return null;
+        }
     }
 
-    private Cart removeItemInCart(Cart cart, ShoppingItem shoppingItem){
-        return this.cartService.removeItem(cart, shoppingItem);
+    @RequestMapping(value = "cart/delete", method = RequestMethod.POST)
+    public Cart deleteItemInCart(@RequestBody ShoppingItem shoppingItem,
+                                 HttpServletRequest request){
+        HttpSession session = request.getSession();
+        UserPrincipal customer = (UserPrincipal)session.getAttribute(UserPrincipal.SESSION_ATTRIBUTE_KEY);
+
+        logger.info("[cart/delete] shoppingItem: ");
+        logger.info(shoppingItem);
+
+        if (customer != null){
+            Cart cart = this.cartService.findCartByCustomer(customer);
+            cart = this.cartService.deleteItem(cart, shoppingItem);
+            return cart;
+        }else{
+            return null;
+        }
     }
 }

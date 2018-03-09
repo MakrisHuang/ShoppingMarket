@@ -118,4 +118,14 @@ public class ShoppingItem implements Serializable{
     }
 
     public ShoppingItem() {}
+
+    @Override
+    public String toString(){
+        return "id: " + this.id +
+                ", name: " + this.name +
+                ", category: " + this.category +
+                ", description: " + this.description +
+                ", price: " + this.price +
+                ", image: " + this.image.toString();
+    }
 }

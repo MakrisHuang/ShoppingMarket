@@ -22,19 +22,19 @@
                     <th scope="col"><spring:message code="cart.action"/></th>
                 </tr>
             </thead>
-            <tbody ng-repeat="item in cart">
+            <tbody ng-repeat="item in cartHelper.cart.cartItems">
                 <tr>
-                    <td>{{item.itemName}}</td>
+                    <td>{{item.shoppingItem.name}}</td>
                     <td>{{item.availableStatus}}</td>
-                    <td>{{item.price}}</td>
+                    <td>{{item.shoppingItem.price}}</td>
                     <td>
-                        <span class="glyphicon glyphicon-plus-sign" ng-click="increaseAmount(orderedItem)"></span>
+                        <span class="oi oi-plus" ng-click="increaseAmount(item)"></span>
                             {{item.amount}}
-                        <span class="glyphicon glyphicon-minus-sign" ng-click="decreaseAmount(orderedItem, $index)"></span>
+                        <span class="oi oi-minus" ng-click="decreaseAmount(item)"></span>
                     </td>
-                    <td>{{item.price * item.amount}}</td>
+                    <td>{{item.shoppingItem.price * item.amount}}</td>
                     <td>
-                        <button class="btn btn-danger btn-sm" ng-click="removeItemInCart(item)"><spring:message code="cart.cancel"/></button>
+                        <button class="btn btn-danger btn-sm" ng-click="deleteItemInCart(item.shoppingItem, $index)"><spring:message code="cart.cancel"/></button>
                     </td>
                 </tr>
             </tbody>
