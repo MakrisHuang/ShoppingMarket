@@ -34,15 +34,15 @@ CREATE TABLE ShoppingItem (
   Image BLOB NULL
 ) ENGINE = InnoDB;
 
-CREATE TABLE Orders_ShoppingItem(
+CREATE TABLE Orders_CartItem(
   SortKey SMALLINT NOT NULL ,
   OrderId BIGINT UNSIGNED NOT NULL,
-  ShoppingItemId BIGINT UNSIGNED NOT NULL,
-  CONSTRAINT Orders_ShoppingItem_Order FOREIGN KEY (OrderId)
+  CartItemId BIGINT UNSIGNED NOT NULL,
+  CONSTRAINT Orders_CartItem_Order FOREIGN KEY (OrderId)
     REFERENCES Orders(OrderId) ON DELETE CASCADE,
-  CONSTRAINT Orders_ShoppingItem_ShoppingItem FOREIGN KEY (ShoppingItemId)
-    REFERENCES ShoppingItem(ShoppingItemId) ON DELETE CASCADE,
-  INDEX Orders_OrderedShoppingItems (OrderId, SortKey, ShoppingItemId)
+  CONSTRAINT Orders_CartItem_CartItem FOREIGN KEY (CartItemId)
+    REFERENCES CartItem(CartItemId) ON DELETE CASCADE,
+  INDEX Orders_OrderedCartItems (OrderId, SortKey, CartItemId)
 ) ENGINE = InnoDB;
 
 CREATE TABLE Cart(

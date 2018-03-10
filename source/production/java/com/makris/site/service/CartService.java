@@ -11,4 +11,5 @@ public interface CartService {
     Cart updateItemAmount(Cart cart, CartItem newCartItem);
     Cart deleteItem(Cart cart,
                     ShoppingItem shoppingItem);
+    void deleteCartByCustomer(UserPrincipal customer);
 }

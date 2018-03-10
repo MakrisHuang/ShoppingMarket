@@ -41,7 +41,7 @@ public class Order implements Serializable{
     private Instant dateCreated;
 
     @Valid
-    private List<ShoppingItem> items = new ArrayList<>();
+    private List<CartItem> items = new ArrayList<>();
 
     @Id
     @Column(name = "OrderId")
@@ -103,25 +103,41 @@ public class Order implements Serializable{
         this.dateCreated = dateCreated;
     }
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL,
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL,
             orphanRemoval = true)
-    @JoinTable(name = "Orders_ShoppingItem",
+    @JoinTable(name = "Orders_CartItem",
             // JoinColumn name為SQL表實體的名稱，referencedColName為@Id所代表的column name
             joinColumns = { @JoinColumn(name = "OrderId")},
-            inverseJoinColumns = {@JoinColumn(name = "ShoppingItemId")})
+            inverseJoinColumns = {@JoinColumn(name = "CartItemId")})
     @OrderColumn(name = "SortKey")
-    @XmlElement(name = "shoppingItem")
+    @XmlElement
     @JsonProperty
-    public List<ShoppingItem> getItems() {
+    public List<CartItem> getItems() {
         return items;
     }
 
-    public void setItems(List<ShoppingItem> items) {
+    public void setItems(List<CartItem> items) {
         this.items = items;
     }
 
     @Transient
-    public int getNumberOfShoppingItems(){
+    public int getNumberOfCartItems(){
         return this.items.size();
+    }
+
+    @Override
+    public String toString(){
+        String itemsConcatStr = "";
+        for (CartItem item: this.items) {
+            itemsConcatStr = itemsConcatStr + item.toString() + " ";
+        }
+        String orderStr = "id: " + this.id
+                + ", customer: " + this.customer.toString()
+                + ", dateCreate: " + this.dateCreated.toString()
+                + ", price: " + this.price.toString()
+                + ", status: " + this.status
+                + ", items: [" + itemsConcatStr + "]";
+
+        return orderStr;
     }
 }

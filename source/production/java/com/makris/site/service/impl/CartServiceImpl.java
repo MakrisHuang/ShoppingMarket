@@ -67,4 +67,12 @@ public class CartServiceImpl implements CartService {
 
         return cart;
     }
+
+    @Override
+    public void deleteCartByCustomer(UserPrincipal customer) {
+        Cart cart = this.cartRepository.findByCustomer(customer);
+        if (cart != null) {
+            this.cartRepository.delete(cart);
+        }
+    }
 }

@@ -1,7 +1,6 @@
 package com.makris.site.service.impl;
 
 import com.makris.site.entities.Order;
-import com.makris.site.entities.ShoppingItem;
 import com.makris.site.entities.UserPrincipal;
 import com.makris.site.repositories.OrderRepository;
 import com.makris.site.repositories.ShoppingItemRepository;
@@ -44,18 +43,5 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public void deleteOrder(long orderId) {
         this.orderRepository.delete(orderId);
-    }
-
-
-    @Override
-    @Transactional
-    public void saveShoppingItem(ShoppingItem shoppingItem, long orderId) {
-//        this.shoppingItemRepository.save(shoppingItem);
-    }
-
-    @Override
-    @Transactional
-    public void deleteShoppingItem(long shoppingItemId) {
-//        this.shoppingItemRepository.delete(shoppingItemId);
     }
 }

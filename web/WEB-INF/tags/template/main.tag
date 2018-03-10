@@ -40,8 +40,7 @@
         <%--<script src="<c:url value="/resource/js/services/cartHelper.js"/>"></script>--%>
 
         <%--controller--%>
-        <script src="<c:url value="/resource/js/controllers/controller_orders.js"/>"></script>
-        <script src="<c:url value="/resource/js/controllers/controller_items.js"/>"></script>
+        <script src="<c:url value="/resource/js/controllers/controllers.js"/>"></script>
 
         <script type="text/javascript" lang="javascript">
 
@@ -50,7 +49,7 @@
     <body>
         <header>
             <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-                <a class="navbar-brand" href="#"><spring:message code="title.company"/></a>
+                <a class="navbar-brand" href="/"><spring:message code="title.company"/></a>
                 <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -81,7 +80,7 @@
                                     </a>
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                         <a class="dropdown-item" href="<c:url value="/profile"/>"><spring:message code="title.profile.basic"/></a>
-                                        <a class="dropdown-item" href="<c:url value="/orders" />"><spring:message code="title.profile.orders" /></a>
+                                        <a class="dropdown-item" href="<c:url value="/orders?action=viewall" />"><spring:message code="title.profile.orders.viewall" /></a>
                                         <a class="dropdown-item" href="<c:url value="/cart"/>"><spring:message code="title.profile.cart"/></a>
                                     </div>
                                 </li>

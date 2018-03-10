@@ -1,7 +1,6 @@
 package com.makris.site.service;
 
 import com.makris.site.entities.Order;
-import com.makris.site.entities.ShoppingItem;
 import com.makris.site.entities.UserPrincipal;
 import org.springframework.validation.annotation.Validated;
 
@@ -17,8 +16,4 @@ public interface OrderService {
     Order getOrder(long orderId);
     void save(@Valid Order order);
     void deleteOrder(long orderId);
-
-//    Page<ShoppingItem> getShoppingItems(long shoppingItemId, Pageable page);
-    void saveShoppingItem(@Valid ShoppingItem shoppingItem, long orderId);
-    void deleteShoppingItem(long shoppingItemId);
 }

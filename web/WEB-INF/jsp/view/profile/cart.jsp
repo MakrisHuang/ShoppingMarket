@@ -39,11 +39,10 @@
                 </tr>
             </tbody>
             <caption><spring:message code="cart.totalPrice"/> : {{getCartTotalPrice()}}</caption>
-            <tfoot>
-            <div class="nav nav-pills">
-                <button class="btn btn-success btn pull-right">Check Out</button>
-            </tfoot>
         </table>
+        <div>
+            <button class="btn btn-success btn float-sm-right" ng-click="checkOut(cartHelper.cart)">Check Out</button>
+        </div>
     </section>
 </template:main>
 
