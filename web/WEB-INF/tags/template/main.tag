@@ -40,7 +40,6 @@
         <%--<script src="<c:url value="/resource/js/services/cartHelper.js"/>"></script>--%>
 
         <%--controller--%>
-        <%--<script src="<c:url value="/resource/js/controllers/controller_cart.js"/>"></script>--%>
         <script src="<c:url value="/resource/js/controllers/controller_orders.js"/>"></script>
         <script src="<c:url value="/resource/js/controllers/controller_items.js"/>"></script>
 

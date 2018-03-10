@@ -39,6 +39,10 @@
                 </tr>
             </tbody>
             <caption><spring:message code="cart.totalPrice"/> : {{getCartTotalPrice()}}</caption>
+            <tfoot>
+            <div class="nav nav-pills">
+                <button class="btn btn-success btn pull-right">Check Out</button>
+            </tfoot>
         </table>
     </section>
 </template:main>

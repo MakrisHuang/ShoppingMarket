@@ -76,7 +76,6 @@ angular.module('Store', [])
         var url = '/services/Rest/shopping?page=' + page
             + "&category=" + category + "&size=" + size;
         $http.get(url).then(function (response) {
-            console.log(response);
             $scope.shoppingItems = response.data["content"];
             console.log($scope.shoppingItems);
         }, function(err){
