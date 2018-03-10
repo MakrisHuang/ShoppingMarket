@@ -34,15 +34,15 @@ CREATE TABLE ShoppingItem (
   Image BLOB NULL
 ) ENGINE = InnoDB;
 
-CREATE TABLE Orders_CartItem(
+CREATE TABLE Orders_CartItemForOrder(
   SortKey SMALLINT NOT NULL ,
   OrderId BIGINT UNSIGNED NOT NULL,
-  CartItemId BIGINT UNSIGNED NOT NULL,
-  CONSTRAINT Orders_CartItem_Order FOREIGN KEY (OrderId)
+  CartItemForOrderId BIGINT UNSIGNED NOT NULL,
+  CONSTRAINT Orders_CartItemForOrder_Order FOREIGN KEY (OrderId)
     REFERENCES Orders(OrderId) ON DELETE CASCADE,
-  CONSTRAINT Orders_CartItem_CartItem FOREIGN KEY (CartItemId)
-    REFERENCES CartItem(CartItemId) ON DELETE CASCADE,
-  INDEX Orders_OrderedCartItems (OrderId, SortKey, CartItemId)
+  CONSTRAINT Orders_CartItemForOrder_CartItemForOrder FOREIGN KEY (CartItemForOrderId)
+    REFERENCES CartItemForOrder(CartItemForOrderId) ON DELETE CASCADE,
+  INDEX Orders_OrderedCartItems (OrderId, SortKey, CartItemForOrderId)
 ) ENGINE = InnoDB;
 
 CREATE TABLE Cart(
@@ -58,6 +58,14 @@ CREATE TABLE CartItem(
   Amount BIGINT UNSIGNED NOT NULL,
   CONSTRAINT CartItem_ShoppingItemId FOREIGN KEY (ShoppingItemId)
     REFERENCES ShoppingItem(ShoppingItemId)
+) ENGINE = InnoDB;
+
+CREATE TABLE CartItemForOrder(
+  CartItemForOrderId BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  ShoppingItemId BIGINT UNSIGNED NOT NULL,
+  Amount BIGINT UNSIGNED NOT NULL,
+  CONSTRAINT CartItemForOrder_ShoppingItemId FOREIGN KEY (ShoppingItemId)
+  REFERENCES ShoppingItem(ShoppingItemId)
 ) ENGINE = InnoDB;
 
 CREATE TABLE Cart_CartItem(

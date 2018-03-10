@@ -48,7 +48,7 @@ public class Order implements Serializable{
     private Instant dateCreated;
 
     @Valid
-    private List<CartItem> items = new ArrayList<>();
+    private List<CartItemForOrder> items = new ArrayList<>();
 
     @Id
     @Column(name = "OrderId")
@@ -112,18 +112,18 @@ public class Order implements Serializable{
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL,
             orphanRemoval = true)
-    @JoinTable(name = "Orders_CartItem",
+    @JoinTable(name = "Orders_CartItemForOrder",
             // JoinColumn name為SQL表實體的名稱，referencedColName為@Id所代表的column name
             joinColumns = { @JoinColumn(name = "OrderId")},
-            inverseJoinColumns = {@JoinColumn(name = "CartItemId")})
+            inverseJoinColumns = {@JoinColumn(name = "CartItemForOrderId")})
     @OrderColumn(name = "SortKey")
     @XmlElement
     @JsonProperty
-    public List<CartItem> getItems() {
+    public List<CartItemForOrder> getItems() {
         return items;
     }
 
-    public void setItems(List<CartItem> items) {
+    public void setItems(List<CartItemForOrder> items) {
         this.items = items;
     }
 
@@ -135,7 +135,7 @@ public class Order implements Serializable{
     @Override
     public String toString(){
         String itemsConcatStr = "";
-        for (CartItem item: this.items) {
+        for (CartItemForOrder item: this.items) {
             itemsConcatStr = itemsConcatStr + item.toString() + " ";
         }
         String orderStr = "id: " + this.id
@@ -146,5 +146,12 @@ public class Order implements Serializable{
                 + ", items: [" + itemsConcatStr + "]";
 
         return orderStr;
+    }
+
+    public void convertCartItemsToCartItemsForOrder(List<CartItem> cartItemList){
+        for (CartItem cartItem: cartItemList){
+            CartItemForOrder cartItemForOrder = new CartItemForOrder(cartItem);
+            this.items.add(cartItemForOrder);
+        }
     }
 }

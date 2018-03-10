@@ -96,7 +96,9 @@ public class OrdersRestEndPoint {
             order.setStatus("created");
             order.setDateCreated(Instant.now());
             order.setPrice(calculateTotalPrice(cart));
-            order.setItems(cart.getCartItems());
+
+            // create CartItemForOrder
+            order.convertCartItemsToCartItemsForOrder(cart.getCartItems());
 
             this.ordersInQueue.add(order);
         }
@@ -132,7 +134,7 @@ public class OrdersRestEndPoint {
             this.orderService.save(order);
 
             // clear cart
-//            this.cartService.deleteCartByCustomer(customer);
+            this.cartService.deleteCartByCustomer(customer);
 
             // clear temporary order
             for (Order tempOrder: this.ordersInQueue){

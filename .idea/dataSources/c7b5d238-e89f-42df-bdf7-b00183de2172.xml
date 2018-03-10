@@ -930,292 +930,328 @@
     <table id="235" parent="4" name="CartItem">
       <Engine>InnoDB</Engine>
     </table>
-    <table id="236" parent="4" name="Cart_CartItem">
+    <table id="236" parent="4" name="CartItemForOrder">
       <Engine>InnoDB</Engine>
     </table>
-    <table id="237" parent="4" name="Orders">
+    <table id="237" parent="4" name="Cart_CartItem">
       <Engine>InnoDB</Engine>
     </table>
-    <table id="238" parent="4" name="Orders_CartItem">
+    <table id="238" parent="4" name="Orders">
       <Engine>InnoDB</Engine>
     </table>
-    <table id="239" parent="4" name="ShoppingItem">
+    <table id="239" parent="4" name="Orders_CartItemForOrder">
       <Engine>InnoDB</Engine>
     </table>
-    <table id="240" parent="4" name="UserPrincipal">
+    <table id="240" parent="4" name="ShoppingItem">
       <Engine>InnoDB</Engine>
     </table>
-    <column id="241" parent="234" name="CartId">
+    <table id="241" parent="4" name="UserPrincipal">
+      <Engine>InnoDB</Engine>
+    </table>
+    <column id="242" parent="234" name="CartId">
       <Position>1</Position>
       <DataType>bigint(20) unsigned|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="242" parent="234" name="UserId">
+    <column id="243" parent="234" name="UserId">
       <Position>2</Position>
       <DataType>bigint(20) unsigned|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="243" parent="234" name="Cart_UserId">
+    <index id="244" parent="234" name="Cart_UserId">
       <ColNames>UserId</ColNames>
     </index>
-    <key id="244" parent="234" name="PRIMARY">
+    <key id="245" parent="234" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>CartId</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="245" parent="234" name="Cart_UserId">
+    <foreign-key id="246" parent="234" name="Cart_UserId">
       <ColNames>UserId</ColNames>
       <RefSchemaName>shoppingmarket</RefSchemaName>
       <RefTableName>UserPrincipal</RefTableName>
       <RefColNames>UserId</RefColNames>
     </foreign-key>
-    <column id="246" parent="235" name="CartItemId">
+    <column id="247" parent="235" name="CartItemId">
       <Position>1</Position>
       <DataType>bigint(20) unsigned|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="247" parent="235" name="ShoppingItemId">
+    <column id="248" parent="235" name="ShoppingItemId">
       <Position>2</Position>
       <DataType>bigint(20) unsigned|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="248" parent="235" name="Amount">
+    <column id="249" parent="235" name="Amount">
       <Position>3</Position>
       <DataType>bigint(20) unsigned|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="249" parent="235" name="CartItem_ShoppingItemId">
+    <index id="250" parent="235" name="CartItem_ShoppingItemId">
       <ColNames>ShoppingItemId</ColNames>
     </index>
-    <key id="250" parent="235" name="PRIMARY">
+    <key id="251" parent="235" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>CartItemId</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="251" parent="235" name="CartItem_ShoppingItemId">
+    <foreign-key id="252" parent="235" name="CartItem_ShoppingItemId">
       <ColNames>ShoppingItemId</ColNames>
       <RefSchemaName>shoppingmarket</RefSchemaName>
       <RefTableName>ShoppingItem</RefTableName>
       <RefColNames>ShoppingItemId</RefColNames>
     </foreign-key>
-    <column id="252" parent="236" name="SortKey">
+    <column id="253" parent="236" name="CartItemForOrderId">
       <Position>1</Position>
-      <DataType>smallint(6)|0</DataType>
+      <DataType>bigint(20) unsigned|0</DataType>
       <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="253" parent="236" name="CartId">
+    <column id="254" parent="236" name="ShoppingItemId">
       <Position>2</Position>
       <DataType>bigint(20) unsigned|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="254" parent="236" name="CartItemId">
+    <column id="255" parent="236" name="Amount">
       <Position>3</Position>
       <DataType>bigint(20) unsigned|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="255" parent="236" name="Cart_CartItem_Cart">
+    <index id="256" parent="236" name="CartItemForOrder_ShoppingItemId">
+      <ColNames>ShoppingItemId</ColNames>
+    </index>
+    <key id="257" parent="236" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>CartItemForOrderId</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="258" parent="236" name="CartItemForOrder_ShoppingItemId">
+      <ColNames>ShoppingItemId</ColNames>
+      <RefSchemaName>shoppingmarket</RefSchemaName>
+      <RefTableName>ShoppingItem</RefTableName>
+      <RefColNames>ShoppingItemId</RefColNames>
+    </foreign-key>
+    <column id="259" parent="237" name="SortKey">
+      <Position>1</Position>
+      <DataType>smallint(6)|0</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="260" parent="237" name="CartId">
+      <Position>2</Position>
+      <DataType>bigint(20) unsigned|0</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="261" parent="237" name="CartItemId">
+      <Position>3</Position>
+      <DataType>bigint(20) unsigned|0</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <index id="262" parent="237" name="Cart_CartItem_Cart">
       <ColNames>CartId</ColNames>
     </index>
-    <index id="256" parent="236" name="Cart_CartItem_CartItem">
+    <index id="263" parent="237" name="Cart_CartItem_CartItem">
       <ColNames>CartItemId</ColNames>
     </index>
-    <foreign-key id="257" parent="236" name="Cart_CartItem_Cart">
+    <foreign-key id="264" parent="237" name="Cart_CartItem_Cart">
       <ColNames>CartId</ColNames>
       <RefSchemaName>shoppingmarket</RefSchemaName>
       <RefTableName>Cart</RefTableName>
       <RefColNames>CartId</RefColNames>
       <OnDelete>cascade</OnDelete>
     </foreign-key>
-    <column id="258" parent="237" name="OrderId">
+    <column id="265" parent="238" name="OrderId">
       <Position>1</Position>
       <DataType>bigint(20) unsigned|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="259" parent="237" name="Price">
+    <column id="266" parent="238" name="Price">
       <Position>2</Position>
       <DataType>int(10) unsigned|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="260" parent="237" name="UserId">
+    <column id="267" parent="238" name="UserId">
       <Position>3</Position>
       <DataType>bigint(20) unsigned|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="261" parent="237" name="Status">
+    <column id="268" parent="238" name="Status">
       <Position>4</Position>
       <DataType>text|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="262" parent="237" name="DateCreated">
+    <column id="269" parent="238" name="DateCreated">
       <Position>5</Position>
       <DataType>timestamp(6)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="263" parent="237" name="Order_UserId">
+    <index id="270" parent="238" name="Order_UserId">
       <ColNames>UserId</ColNames>
     </index>
-    <key id="264" parent="237" name="PRIMARY">
+    <key id="271" parent="238" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>OrderId</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="265" parent="237" name="Order_UserId">
+    <foreign-key id="272" parent="238" name="Order_UserId">
       <ColNames>UserId</ColNames>
       <RefSchemaName>shoppingmarket</RefSchemaName>
       <RefTableName>UserPrincipal</RefTableName>
       <RefColNames>UserId</RefColNames>
       <OnDelete>cascade</OnDelete>
     </foreign-key>
-    <column id="266" parent="238" name="SortKey">
+    <column id="273" parent="239" name="SortKey">
       <Position>1</Position>
       <DataType>smallint(6)|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="267" parent="238" name="OrderId">
+    <column id="274" parent="239" name="OrderId">
       <Position>2</Position>
       <DataType>bigint(20) unsigned|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="268" parent="238" name="CartItemId">
+    <column id="275" parent="239" name="CartItemForOrderId">
       <Position>3</Position>
       <DataType>bigint(20) unsigned|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="269" parent="238" name="Orders_OrderedCartItems">
+    <index id="276" parent="239" name="Orders_OrderedCartItems">
       <ColNames>OrderId
 SortKey
-CartItemId</ColNames>
+CartItemForOrderId</ColNames>
     </index>
-    <index id="270" parent="238" name="Orders_CartItem_CartItem">
-      <ColNames>CartItemId</ColNames>
+    <index id="277" parent="239" name="Orders_CartItemForOrder_CartItemForOrder">
+      <ColNames>CartItemForOrderId</ColNames>
     </index>
-    <foreign-key id="271" parent="238" name="Orders_CartItem_Order">
+    <foreign-key id="278" parent="239" name="Orders_CartItemForOrder_Order">
       <ColNames>OrderId</ColNames>
       <RefSchemaName>shoppingmarket</RefSchemaName>
       <RefTableName>Orders</RefTableName>
       <RefColNames>OrderId</RefColNames>
       <OnDelete>cascade</OnDelete>
     </foreign-key>
-    <foreign-key id="272" parent="238" name="Orders_CartItem_CartItem">
-      <ColNames>CartItemId</ColNames>
+    <foreign-key id="279" parent="239" name="Orders_CartItemForOrder_CartItemForOrder">
+      <ColNames>CartItemForOrderId</ColNames>
       <RefSchemaName>shoppingmarket</RefSchemaName>
-      <RefTableName>CartItem</RefTableName>
-      <RefColNames>CartItemId</RefColNames>
+      <RefTableName>CartItemForOrder</RefTableName>
+      <RefColNames>CartItemForOrderId</RefColNames>
       <OnDelete>cascade</OnDelete>
     </foreign-key>
-    <column id="273" parent="239" name="ShoppingItemId">
+    <column id="280" parent="240" name="ShoppingItemId">
       <Position>1</Position>
       <DataType>bigint(20) unsigned|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="274" parent="239" name="Name">
+    <column id="281" parent="240" name="Name">
       <Position>2</Position>
       <DataType>varchar(255)|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="275" parent="239" name="Category">
+    <column id="282" parent="240" name="Category">
       <Position>3</Position>
       <DataType>varchar(255)|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="276" parent="239" name="Description">
+    <column id="283" parent="240" name="Description">
       <Position>4</Position>
       <DataType>text|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="277" parent="239" name="Price">
+    <column id="284" parent="240" name="Price">
       <Position>5</Position>
       <DataType>double unsigned|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="278" parent="239" name="Image">
+    <column id="285" parent="240" name="Image">
       <Position>6</Position>
       <DataType>blob|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <key id="279" parent="239" name="PRIMARY">
+    <key id="286" parent="240" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>ShoppingItemId</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="280" parent="240" name="UserId">
+    <column id="287" parent="241" name="UserId">
       <Position>1</Position>
       <DataType>bigint(20) unsigned|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="281" parent="240" name="Username">
+    <column id="288" parent="241" name="Username">
       <Position>2</Position>
       <DataType>varchar(30)|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="282" parent="240" name="HashedPassword">
+    <column id="289" parent="241" name="HashedPassword">
       <Position>3</Position>
       <DataType>binary(60)|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="283" parent="240" name="NickName">
+    <column id="290" parent="241" name="NickName">
       <Position>4</Position>
       <DataType>varchar(255)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="284" parent="240" name="TelPhone">
+    <column id="291" parent="241" name="TelPhone">
       <Position>5</Position>
       <DataType>varchar(30)|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="285" parent="240" name="PostCode">
+    <column id="292" parent="241" name="PostCode">
       <Position>6</Position>
       <DataType>varchar(30)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="286" parent="240" name="Address">
+    <column id="293" parent="241" name="Address">
       <Position>7</Position>
       <DataType>varchar(255)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="287" parent="240" name="Email">
+    <column id="294" parent="241" name="Email">
       <Position>8</Position>
       <DataType>varchar(255)|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="288" parent="240" name="UserPrincipal_Username">
+    <index id="295" parent="241" name="UserPrincipal_Username">
       <ColNames>Username</ColNames>
       <Unique>1</Unique>
     </index>
-    <key id="289" parent="240" name="PRIMARY">
+    <key id="296" parent="241" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>UserId</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="290" parent="240" name="UserPrincipal_Username">
+    <key id="297" parent="241" name="UserPrincipal_Username">
       <ColNames>Username</ColNames>
       <UnderlyingIndexName>UserPrincipal_Username</UnderlyingIndexName>
     </key>
