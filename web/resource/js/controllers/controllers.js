@@ -65,28 +65,49 @@ angular.module('Store', [])
 
     return service;
 })
-.controller('ShoppingItemController', ['CartHelper', '$scope', '$http', function (CartHelper, $scope, $http) {
+.controller('ShoppingItemController', ['CartHelper', '$scope', '$http', '$location', '$window',
+    function (CartHelper, $scope, $http, $location, $window) {
     $scope.cartHelper = CartHelper;
 
     $scope.shoppingItems = [
 
     ];
 
-    $scope.fetchShoppingItems = function (page, category, size) {
-        var url = '/services/Rest/shopping?page=' + page
-            + "&category=" + category + "&size=" + size;
-        $http.get(url).then(function (response) {
-            $scope.shoppingItems = response.data["content"];
-            console.log($scope.shoppingItems);
-        }, function(err){
-            if (err) {
-                console.log("Error fetch shopping items");
-            }
-        });
+    $scope.updateContent = function(page, category, size){
+        console.log("location: " + window.location.pathname);
+
+        if (window.location.pathname !== '/'){
+            // then redirect to main page for loading jsp file
+            $window.location.href = '/';
+        }else{
+            $scope.fetchShoppingItems(page, category, size);
+        }
     };
 
-    // load default shopping items
-    $scope.fetchShoppingItems(0, "pc", 3);
+    $scope.fetchShoppingItems = function (page, category, size) {
+        if (window.location.pathname === '/') {
+            var url = '/services/Rest/shopping?page=' + page
+                + "&category=" + category + "&size=" + size;
+            $http.get(url).then(function (response) {
+                $scope.shoppingItems = response.data["content"];
+                console.log($scope.shoppingItems);
+
+                window.history.replaceState({}, document.title, "/");
+            }, function (err) {
+                if (err) {
+                    console.log("Error fetch shopping items");
+                }
+            });
+        }
+    };
+
+    $scope.fetchShoppingItems(0, 'pc', 3);
+
+    // $scope.loadShoppingContent = function(){
+    //     if (window.location.pathname === '/'){
+    //
+    //     }
+    // };
 
     $scope.addItemToCart = function (item) {
         $scope.cartHelper.addToCart(item);

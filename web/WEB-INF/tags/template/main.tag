@@ -184,17 +184,17 @@
         </header>
 
         <div class="container-fluid">
-            <div class="row">
+            <div class="row" ng-controller="ShoppingItemController as itemCtrl">
                 <nav class="col-sm-3 col-md-2 d-none d-sm-block bg-light sidebar"
-                     ng-controller="ShoppingItemController as itemCtrl">
+                     >
                     <ul class="nav nav-pills flex-column">
                         <!-- 商品專區 -->
                         <li class="nav-item">
-                            <a class="nav-link" href="#homeSubmenu" data-toggle="collapse" aria-expanded="false"><spring:message code="title.shopping"/></a>
+                            <a class="nav-link" href="#homeSubmenu" data-toggle="collapse" aria-expanded="true"><spring:message code="title.shopping"/></a>
                             <ul class="collapse list-unstyled" id="homeSubmenu">
-                                <li><a class="nav-link" href="#" ng-click="fetchShoppingItems(0, 'pc', 3)"><spring:message code="title.shopping.pc"/></a></li>
-                                <li><a class="nav-link" href="#" ng-click="fetchShoppingItems(0, 'cell phone', 3)"><spring:message code="title.shopping.cellphone"/></a></li>
-                                <li><a class="nav-link" href="#" ng-click="fetchShoppingItems(0, 'tv', 3)"><spring:message code="title.shopping.tv"/></a></li>
+                                <li><a class="nav-link" href="" ng-click="updateContent(0, 'pc', 3)"><spring:message code="title.shopping.pc"/></a></li>
+                                <li><a class="nav-link" href="" ng-click="updateContent(0, 'cell phone', 3)"><spring:message code="title.shopping.cellphone"/></a></li>
+                                <li><a class="nav-link" href="" ng-click="updateContent(0, 'tv', 3)"><spring:message code="title.shopping.tv"/></a></li>
                             </ul>
                         </li>
                     </ul>
