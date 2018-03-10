@@ -25,7 +25,8 @@ public class OrdersController {
 
     @RequestMapping(value = "orders", method = RequestMethod.GET)
     public ModelAndView orders(@RequestParam("action") String action,
-            Map<String, Object> model,
+                        @RequestParam(value = "orderId", required = false) Integer orderId,
+                                Map<String, Object> model,
                                HttpServletRequest request){
         HttpSession session = request.getSession();
 
@@ -42,10 +43,14 @@ public class OrdersController {
         switch (action){
             case "viewall":
                 return new ModelAndView(JSP_ORDERS_VIEWALL);
+            case "finish":{
+                if (orderId != null){
+                    model.put("orderId", orderId);
+                }
+                return new ModelAndView(JSP_ORDERS_FINISH);
+            }
             case "create":
                 return new ModelAndView(JSP_ORDERS_CREATE);
-            case "finish":
-                return new ModelAndView(JSP_ORDERS_FINISH);
             default:
                 return new ModelAndView(JSP_ORDERS_VIEWALL);
         }

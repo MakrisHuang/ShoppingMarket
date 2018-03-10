@@ -13,6 +13,8 @@ public interface OrderService {
     @NotNull
     List<Order> getAllOrdersByCustomer(UserPrincipal customer);
 
+    Order getLatestOrder(UserPrincipal customer);
+
     Order getOrder(long orderId);
     void save(@Valid Order order);
     void deleteOrder(long orderId);

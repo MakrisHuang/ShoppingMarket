@@ -5,10 +5,12 @@
   Time: 下午2:15
   To change this template use File | Settings | File Templates.
 --%>
+<%--@elvariable id="orderId" type="java.lang.Integer"--%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <spring:message code="title.profile.orders.create" var="ordersTitle"/>
 <template:main htmlTitle="${ordersTitle}" bodyTitle="${ordersTitle}">
     <section ng-controller="OrdersFinishController">
+        <h3 id="orderId" ng-hide="true">${orderId}</h3>
         <h3>Thanks for Your Ordering!</h3>
         <table class="table table-striped">
             <thead>
@@ -18,12 +20,14 @@
                 </tr>
             </thead>
             <tbody>
-                    <tr>{{orderId}}</tr>
-                    <tr>
-                        <button class="btn btn-info float-sm-right" ng-click="checkSpecificOrder(orderId)">
+                <tr>
+                    <td>${orderId}</td>
+                    <td>
+                        <button class="btn btn-info float-sm-left" ng-click="checkOrderContent()">
                             <spring:message code="title.profile.orders.finish.checkOrder"/>
                         </button>
-                    </tr>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </section>

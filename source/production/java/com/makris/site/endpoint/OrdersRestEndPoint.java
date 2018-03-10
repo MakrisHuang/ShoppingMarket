@@ -120,7 +120,7 @@ public class OrdersRestEndPoint {
     }
 
     @RequestMapping(value = "orders/finish", method = RequestMethod.POST)
-    public ResponseEntity<Void> finishOrder(@RequestBody Order order,
+    public Integer finishOrder(@RequestBody Order order,
                              HttpServletRequest request){
         HttpSession session = request.getSession();
         UserPrincipal customer = (UserPrincipal)session.getAttribute(UserPrincipal.SESSION_ATTRIBUTE_KEY);
@@ -141,6 +141,11 @@ public class OrdersRestEndPoint {
                 }
             }
             // send email to customer
+
+            // retrieve saved order from database
+            Order savedOrder = this.orderService.getLatestOrder(customer);
+            Long id = savedOrder.getId();
+            return id.intValue();
         }
         return null;
     }

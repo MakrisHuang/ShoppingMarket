@@ -15,9 +15,16 @@ import java.util.List;
 @Entity
 @Table(name = "Orders")
 @SqlResultSetMapping(
-        name = "searchResultMapping.order",
-        entities = {@EntityResult(entityClass = Order.class)},
-        columns = {@ColumnResult(name = "_ft_scoreColumn", type = Double.class)}
+    name = "searchResultMapping.order",
+    entities = {
+        @EntityResult(
+            entityClass = Order.class,
+            fields = {
+                @FieldResult(name = "id", column = "OrderId"),
+                @FieldResult(name = "userId", column = "UserId")
+            }
+        )
+    }
 )
 @XmlRootElement(namespace = "http://example.com/xmlns/shopping", name = "order")
 @XmlAccessorType(XmlAccessType.NONE)

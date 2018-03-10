@@ -235,7 +235,9 @@ angular.module('Store', [])
             data: $scope.temporaryOrder
         }).then(
             function (response) {
-                $window.location.href = "/orders?action=finish"
+                // get save order id from server
+                var orderId = response.data;
+                $window.location.href = "/orders?action=finish&orderId=" + orderId;
             }, function (err) {
                 if (err){
                     console.log("Error sending order");
@@ -246,10 +248,10 @@ angular.module('Store', [])
 }])
 .controller('OrdersFinishController', ['$http', '$scope', '$window',
     function($http, $scope, $window){
-    $scope.orderId = null;
+    $scope.orderId = document.getElementById("orderId").textContent;
 
-    $scope.checkSpecificOrder = function(orderId){
-        $window.location.href = '/orders/' + orderId;
+    $scope.checkOrderContent = function(){
+        $window.location.href = '/orders/' + $scope.orderId;
     }
 }])
 .controller('OrderSingleController', ['$http', '$scope', function($http, $scope){

@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +20,9 @@ public class OrderServiceImpl implements OrderService {
     @Inject
     ShoppingItemRepository shoppingItemRepository;
 
+    @PersistenceContext
+    EntityManager entityManager;
+
     @Override
     @Transactional
     public List<Order> getAllOrdersByCustomer(UserPrincipal customer) {
@@ -25,6 +30,11 @@ public class OrderServiceImpl implements OrderService {
         List<Order> orderList = new ArrayList<>();
         orders.forEach(orderList::add);
         return orderList;
+    }
+
+    @Override
+    public Order getLatestOrder(UserPrincipal customer) {
+        return this.orderRepository.getLatestOrderOfCustomer(customer);
     }
 
     @Override
