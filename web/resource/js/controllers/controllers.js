@@ -65,6 +65,9 @@ angular.module('Store', [])
 
     return service;
 })
+.factory('JwtHelper', function($http){
+
+})
 .controller('ShoppingItemController', ['CartHelper', '$scope', '$http', '$location', '$window',
     function (CartHelper, $scope, $http, $location, $window) {
     $scope.cartHelper = CartHelper;
@@ -102,12 +105,6 @@ angular.module('Store', [])
     };
 
     $scope.fetchShoppingItems(0, 'pc', 3);
-
-    // $scope.loadShoppingContent = function(){
-    //     if (window.location.pathname === '/'){
-    //
-    //     }
-    // };
 
     $scope.addItemToCart = function (item) {
         $scope.cartHelper.addToCart(item);
