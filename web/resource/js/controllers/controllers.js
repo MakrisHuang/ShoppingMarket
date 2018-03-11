@@ -66,7 +66,25 @@ angular.module('Store', [])
     return service;
 })
 .factory('JwtHelper', function($http){
+    return {
+        generateHeader: function(headerMap){
+            var stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(headerMap));
+            return btoa(stringifiedHeader);
+        },
+        generatePayload: function(payloadMap){
+            var stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(payloadMap));
+            return btoa(stringifiedHeader);
+        },
+        generateToken: function(headerMap, payloadMap, secret){
+            var token = this.generateHeader(headerMap) + "." + this.generatePayload(payloadMap);
+            var signature = CryptoJS.HmacSHA256(token, secret);
+            signature = btoa(signature);
 
+            var signedToken = token + "." + signature;
+            return signedToken;
+        }
+
+    };
 })
 .controller('ShoppingItemController', ['CartHelper', '$scope', '$http', '$location', '$window',
     function (CartHelper, $scope, $http, $location, $window) {

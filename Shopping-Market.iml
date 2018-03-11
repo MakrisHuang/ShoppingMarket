@@ -120,5 +120,6 @@
     <orderEntry type="library" name="Maven: com.auth0:java-jwt:3.2.0" level="project" />
     <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.10" level="project" />
     <orderEntry type="library" name="Maven: org.bouncycastle:bcprov-jdk15on:1.55" level="project" />
+    <orderEntry type="library" name="Maven: org.webjars:cryptojs:3.1.2" level="project" />
   </component>
 </module>

@@ -29,8 +29,10 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.6/angular.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.6/angular-route.min.js"></script>
 
+        <%--Security--%>
+        <script src="<c:url value="/resource/js/security/hmac-sha256.js"/>"></script>
+
         <!-- customized -->
-        <%--<link rel="stylesheet" href="<c:url value="/resource/stylesheet/main.css" />" />--%>
         <link rel="stylesheet" href="<c:url value="/resource/stylesheet/dashboard.css" />" />
         <link rel="stylesheet" href="<c:url value="/resource/stylesheet/open-iconic/font/css/open-iconic-bootstrap.css"/>"/>
 
