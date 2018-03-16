@@ -1,9 +1,43 @@
-angular.module('Store', [])
-.factory('CartHelper', function ($http){
+angular.module('Store', ['ngCookies'])
+.service('JwtHelper', ['$cookies', function($http, $cookies){
+    return {
+        // General helper function
+        generateHeader: function(headerMap){
+            var stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(headerMap));
+            return btoa(stringifiedHeader);
+        },
+        generatePayload: function(payloadMap){
+            var stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(payloadMap));
+            return btoa(stringifiedHeader);
+        },
+        generateToken: function(payloadMap){
+            var header = {"typ": "JWT", "alg": "HS256"};
+            var token = this.generateHeader(header) + "." + this.generatePayload(payloadMap);
+            var signature = CryptoJS.HmacSHA256(token, this.getSecret(
+            signature = btoa(signature);
+
+            var signedToken = token + "." + signature;
+            return signedToken;
+        },
+
+        decodeToken: function (token) {
+            return jwt_decode(token);
+        },
+        storeSecret: function(token){
+            var decoded = this.decodeToken(token);
+            $cookies.put('secret', decoded['secret']);
+        },
+        getSecret: function(){
+            return $cookies.get('secret');
+        }
+    };
+}])
+.factory('CartHelper', ['JwtHelper', '$http', function (JwtHelper, $http){
     var service = {
         cart: {},
 
         addToCart: function(shoppingItem){
+            // var encodedShoppingItem = JwtHelper.generateToken(shoppingItem);
             return $http({
                 method: 'POST',
                 url: 'http://localhost:8080/services/Rest/cart/add',
@@ -64,30 +98,9 @@ angular.module('Store', [])
     };
 
     return service;
-})
-.factory('JwtHelper', function($http){
-    return {
-        generateHeader: function(headerMap){
-            var stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(headerMap));
-            return btoa(stringifiedHeader);
-        },
-        generatePayload: function(payloadMap){
-            var stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(payloadMap));
-            return btoa(stringifiedHeader);
-        },
-        generateToken: function(headerMap, payloadMap, secret){
-            var token = this.generateHeader(headerMap) + "." + this.generatePayload(payloadMap);
-            var signature = CryptoJS.HmacSHA256(token, secret);
-            signature = btoa(signature);
-
-            var signedToken = token + "." + signature;
-            return signedToken;
-        }
-
-    };
-})
-.controller('ShoppingItemController', ['CartHelper', '$scope', '$http', '$location', '$window',
-    function (CartHelper, $scope, $http, $location, $window) {
+}])
+.controller('ShoppingItemController', ['CartHelper', '$scope', '$http', '$location',
+    '$window', function (CartHelper, $scope, $http, $location, $window) {
     $scope.cartHelper = CartHelper;
 
     $scope.shoppingItems = [
@@ -128,7 +141,8 @@ angular.module('Store', [])
         $scope.cartHelper.addToCart(item);
     };
 }])
-.controller('CartController', function ($scope, $http, $window, CartHelper) {
+.controller('CartController', ['$scope', '$http', '$window', 'CartHelper',
+    function ($scope, $http, $window, CartHelper) {
     $scope.cartHelper = CartHelper;
 
     $scope.fetchCart = function(){
@@ -201,7 +215,7 @@ angular.module('Store', [])
             }
         );
     };
-})
+}])
 .controller('OrdersViewallController', ['$http', '$scope', '$window',
     function($http, $scope, $window){
     $scope.orders = {};
@@ -234,7 +248,8 @@ angular.module('Store', [])
     }
 
 }])
-.controller('OrdersCreateController', ['$http', '$scope', '$window', function($http, $scope, $window){
+.controller('OrdersCreateController', ['$http', '$scope', '$window',
+    function($http, $scope, $window){
     $scope.temporaryOrder = {};
 
     $scope.fetchTemporaryOrder = function(){

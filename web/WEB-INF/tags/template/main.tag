@@ -26,10 +26,12 @@
         <script src="<c:url value="/resource/js/popper.min.js" />"></script>
 
         <!-- angularJS -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.6/angular.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.6/angular.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.6/angular-route.min.js"></script>
+        <script src="https://code.angularjs.org/1.6.6/angular-cookies.js"></script>
 
         <%--Security--%>
+        <script src="<c:url value="/resource/js/security/jwt-decode.min.js"/>"></script>
         <script src="<c:url value="/resource/js/security/hmac-sha256.js"/>"></script>
 
         <!-- customized -->
@@ -37,9 +39,6 @@
         <link rel="stylesheet" href="<c:url value="/resource/stylesheet/open-iconic/font/css/open-iconic-bootstrap.css"/>"/>
 
         <script src="/resource/js/app.js"></script>
-
-        <!-- services -->
-        <%--<script src="<c:url value="/resource/js/services/cartHelper.js"/>"></script>--%>
 
         <%--controller--%>
         <script src="<c:url value="/resource/js/controllers/controllers.js"/>"></script>
