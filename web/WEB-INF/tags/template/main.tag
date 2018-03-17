@@ -6,7 +6,7 @@
 <%@ attribute name="loginFailed" type="java.lang.Boolean" rtexprvalue="true" %>
 <%@ attribute name="userName" type="java.lang.String" rtexprvalue="true" %>
 
-<%--@elvariable id="loginForm" type="com.makris.site.controller.HomeController.LoginForm" --%>
+
 <%--@elvariable id="registerForm" type="com.makris.site.controller.HomeController.RegisterForm" --%>
 
 <%@ attribute name="registerFragment" fragment="true" required="false" %>
@@ -18,12 +18,16 @@
             <c:out value="${fn:trim(htmlTitle)}" /></title>
 
         <!--Bootstrap and jquery-->
+
+        <%--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>--%>
+        <%--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js"></script>--%>
+        <%--<script src="<c:url value="/resource/js/popper.min.js" />"></script>--%>
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css"
               integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy"
               crossorigin="anonymous">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js"></script>
-        <script src="<c:url value="/resource/js/popper.min.js" />"></script>
 
         <!-- angularJS -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.6/angular.js"></script>
@@ -96,7 +100,8 @@
             </nav>
 
             <!-- Login Modal -->
-            <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+                ng-controller="LoginController as loginCtrl">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -121,19 +126,29 @@
                                 </div>
                             </c:if>
 
-                            <form:form action="/login" method="post" modelAttribute="loginForm" >
-                                <form:label path="username"><spring:message code="field.login.username" /></form:label><br />
-                                <form:input path="username" /><br />
-                                <form:errors path="username" cssClass="errors" /><br />
-                                <form:label path="password"><spring:message code="field.login.password" /></form:label><br />
-                                <form:password path="password" /><br />
-                                <form:errors path="password" cssClass="errors" /><br />
+                            <%--<form:form action="/login" method="post" modelAttribute="loginForm" >--%>
+                                <%--<form:label path="username"><spring:message code="field.login.username" /></form:label><br />--%>
+                                <%--<form:input path="username" /><br />--%>
+                                <%--<form:errors path="username" cssClass="errors" /><br />--%>
+                                <%--<form:label path="password"><spring:message code="field.login.password" /></form:label><br />--%>
+                                <%--<form:password path="password" /><br />--%>
+                                <%--<form:errors path="password" cssClass="errors" /><br />--%>
 
+                                <%--<div class="modal-footer">--%>
+                                    <%--<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>--%>
+                                    <%--<button type="submit" class="btn btn-primary"><spring:message code="field.login.submit" /></button>--%>
+                                <%--</div>--%>
+                            <%--</form:form>--%>
+                            <form ng-submit="loginCtrl.submitLogin()">
+                                <label><spring:message code="field.login.username" /></label><br>
+                                <input type="text" ng-model="loginCtrl.username"><br>
+                                <label><spring:message code="field.login.password" /></label><br>
+                                <input type="text" ng-model="loginCtrl.password"><br><br>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                     <button type="submit" class="btn btn-primary"><spring:message code="field.login.submit" /></button>
                                 </div>
-                            </form:form>
+                            </form>
                         </div>
 
                     </div>
@@ -207,8 +222,6 @@
             </div>
         </div>
 
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-                integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-                crossorigin="anonymous"></script>
+
     </body>
 </html>

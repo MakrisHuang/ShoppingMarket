@@ -11,6 +11,7 @@ import com.makris.site.entities.UserPrincipal;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -28,8 +29,14 @@ public class JwtUtils {
     private static final String CLAIM_KEY_EXPIRATION = "expiration";
 
     private static final Logger logger = LogManager.getLogger();
-    private static final String defaultSecret = "sFB4xj23-asg";
+    public static final String defaultSecret = "sFB4xj23-asg";
 
+    public static final String KEY_TOKEN_HEADER = "tokenHeader";
+
+    public UserPrincipal getUserFromHttpRequest(HttpServletRequest request, boolean passwordNeeded){
+        String headerToken = request.getHeader(JwtUtils.KEY_TOKEN_HEADER);
+        return this.getUserFromToken(headerToken, passwordNeeded);
+    }
 
     public UserPrincipal getUserFromToken(String token, boolean passwordNeeded){
         UserPrincipal user = null;
@@ -38,16 +45,16 @@ public class JwtUtils {
             long userId = claimMap.get(CLAIM_KEY_USER_ID).asLong();
             String username = claimMap.get(CLAIM_KEY_USRE_NAME).asString();
             List<String> roles = claimMap.get(CLAIM_KEY_AUTHORITIES).asList(String.class);
-            boolean isAccountEnabled = claimMap.get(CLAIM_KEY_ACCOUNT_ENABLED).asBoolean();
-            boolean isAccountNonExpired = claimMap.get(CLAIM_KEY_ACCOUNT_NON_EXPIRED).asBoolean();
+            String isNonExpired = claimMap.get(CLAIM_KEY_ACCOUNT_NON_EXPIRED).asString();
+            String isAccountEnabled = claimMap.get(CLAIM_KEY_ACCOUNT_ENABLED).asString();
 
             if (passwordNeeded){
                 String password = claimMap.get(CLAIM_KEY_USER_PASSWORD).asString();
-                user =  new UserPrincipal(userId, username, password, isAccountNonExpired,
-                        roles, isAccountEnabled);
+                user =  new UserPrincipal(userId, username, password,
+                        roles, isNonExpired, isAccountEnabled);
             }else {
-                user =  new UserPrincipal(userId, username, isAccountNonExpired,
-                        roles, isAccountEnabled);
+                user =  new UserPrincipal(userId, username,
+                        roles, isNonExpired, isAccountEnabled);
             }
         } catch (Exception e){
             e.printStackTrace();

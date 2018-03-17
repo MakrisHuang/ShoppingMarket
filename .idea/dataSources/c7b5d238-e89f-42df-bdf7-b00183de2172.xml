@@ -1242,16 +1242,26 @@ CartItemForOrderId</ColNames>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="295" parent="241" name="UserPrincipal_Username">
+    <column id="295" parent="241" name="IsNonExpired">
+      <Position>9</Position>
+      <DataType>varchar(10)|0</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="296" parent="241" name="IsAccountEnabled">
+      <Position>10</Position>
+      <DataType>varchar(10)|0</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <index id="297" parent="241" name="UserPrincipal_Username">
       <ColNames>Username</ColNames>
       <Unique>1</Unique>
     </index>
-    <key id="296" parent="241" name="PRIMARY">
+    <key id="298" parent="241" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>UserId</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="297" parent="241" name="UserPrincipal_Username">
+    <key id="299" parent="241" name="UserPrincipal_Username">
       <ColNames>Username</ColNames>
       <UnderlyingIndexName>UserPrincipal_Username</UnderlyingIndexName>
     </key>

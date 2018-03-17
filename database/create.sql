@@ -12,6 +12,8 @@ CREATE TABLE UserPrincipal (
   PostCode VARCHAR(30) NULL,
   Address VARCHAR(255) NULL,
   Email VARCHAR(255) NOT NULL,
+  IsNonExpired VARCHAR(10),
+  IsAccountEnabled VARCHAR(10),
   UNIQUE KEY UserPrincipal_Username (Username)
 ) ENGINE = InnoDB;
 

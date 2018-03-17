@@ -1,7 +1,10 @@
 package com.makris.site.controller;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.makris.config.annotation.WebController;
 import com.makris.site.entities.UserPrincipal;
+import com.makris.site.security.JwtUtils;
 import com.makris.site.service.AuthenticationService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,7 +16,6 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import java.util.Map;
@@ -25,17 +27,20 @@ public class HomeController {
     // JSP page name
     private static final String JSP_HOME = "/shopping/items";
 
-    private static final String ATTR_FORM_LOGIN     = "loginForm";
     private static final String ATTR_FORM_REGISTER  = "registerForm";
     private static final String ATTR_USERNAME       = "userName";
 
     @Inject
     AuthenticationService authenticationService;
+    @Inject
+    JwtUtils jwtUtils;
 
+    // unchecked
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public ModelAndView home(Map<String, Object> model, HttpSession session){
+    public ModelAndView home(Map<String, Object> model, HttpServletRequest request){
         // 檢查、保持登入狀態
-        UserPrincipal customer = (UserPrincipal) UserPrincipal.getPrincipal(session);
+        UserPrincipal customer = jwtUtils.getUserFromHttpRequest(request, false);
+
         if (customer != null){
             model.put("loginFailed", false);
             model.put(ATTR_USERNAME, customer.getUsername());
@@ -43,57 +48,16 @@ public class HomeController {
         else {
             model.put("loginFailed", true);
         }
-        model.put(ATTR_FORM_LOGIN, new LoginForm());
         model.put(ATTR_FORM_REGISTER, new RegisterForm());
         return new ModelAndView(JSP_HOME);
     }
 
-    @RequestMapping(value = "login", method = RequestMethod.POST)
-    public ModelAndView login(Map<String, Object> model, HttpSession session,
-                              HttpServletRequest request, LoginForm form,
-                              Errors errors){
 
-        if (UserPrincipal.getPrincipal(session) != null){
-            // 重新導向到home頁面
-            return this.getHomeRedirect();
-        }
-        if (errors.hasErrors()){
-            form.setPassword(null);
-            return null;
-        }
-        UserPrincipal customer;
-        try{
-            customer = this.authenticationService.
-                    authenticateLogin(form.getUsername(), form.getPassword());
-        }catch (ConstraintViolationException e){
-            form.setPassword(null);
-            model.put("validationErrors", e.getConstraintViolations());
-            return new ModelAndView(JSP_HOME);
-        }
-
-        if (customer == null){
-            form.setPassword(null);
-            model.put("loginFailed", true);
-            model.put(ATTR_FORM_LOGIN, form);
-            model.put(ATTR_FORM_REGISTER, new RegisterForm());
-            return new ModelAndView(JSP_HOME);
-        }
-
-        // login successfully
-        UserPrincipal.setPrincipal(session, customer);
-        request.changeSessionId();
-        model.put(ATTR_USERNAME, customer.getUsername());
-        model.put("loginFailed", false);
-        model.put(ATTR_FORM_LOGIN, new LoginForm());
-        model.put(ATTR_FORM_REGISTER, new RegisterForm());
-        return getHomeRedirect();
-    }
 
     @RequestMapping(value = "logout", method = RequestMethod.GET)
-    public ModelAndView logout(Map<String, Object> model, HttpSession session){
-        UserPrincipal customer = (UserPrincipal)session.getAttribute(UserPrincipal.SESSION_ATTRIBUTE_KEY);
+    public ModelAndView logout(Map<String, Object> model, HttpServletRequest request){
+        UserPrincipal customer = jwtUtils.getUserFromHttpRequest(request, false);
         if (customer != null){
-            UserPrincipal.removePrincipal(session, customer);
 
             // logout successfully
             model.put("loginFailed", true);
@@ -102,16 +66,14 @@ public class HomeController {
             model.put("loginFailed", false);
 
         }
-        model.put(ATTR_FORM_LOGIN, new LoginForm());
         model.put(ATTR_FORM_REGISTER, new RegisterForm());
         return getHomeRedirect();
     }
 
     @RequestMapping(value = "register", method = RequestMethod.POST)
-    public ModelAndView register(Map<String, Object> model, HttpSession session,
-                              HttpServletRequest request, @Valid RegisterForm form,
-                              Errors errors){
-        if (UserPrincipal.getPrincipal(session) != null){
+    public ModelAndView register(Map<String, Object> model, HttpServletRequest request,
+                                 @Valid RegisterForm form, Errors errors){
+        if (jwtUtils.getUserFromHttpRequest(request, false) != null){
             // 重新導向到home頁面
             return getHomeRedirect();
         }
@@ -138,8 +100,8 @@ public class HomeController {
 
             this.authenticationService.saveNewUser(customer, form.getPassword());
 
-            UserPrincipal.setPrincipal(session, customer);
-            request.changeSessionId();
+//            UserPrincipal.setPrincipal(session, customer);
+//            request.changeSessionId();
 
             model.put("userName", customer.getName());
             model.put("loginForm", null);
@@ -155,12 +117,17 @@ public class HomeController {
         return getHomeRedirect();
     }
 
-    public ModelAndView getHomeRedirect(){
+    private ModelAndView getHomeRedirect(){
         RedirectView redirectView = new RedirectView("/", false, false);
         redirectView.setExposeModelAttributes(false);
         return new ModelAndView(redirectView);
     }
 
+    @JsonAutoDetect(creatorVisibility = JsonAutoDetect.Visibility.NONE,
+            fieldVisibility = JsonAutoDetect.Visibility.NONE,
+            getterVisibility = JsonAutoDetect.Visibility.NONE,
+            isGetterVisibility = JsonAutoDetect.Visibility.NONE,
+            setterVisibility = JsonAutoDetect.Visibility.NONE)
     public static class LoginForm
     {
 
@@ -168,6 +135,7 @@ public class HomeController {
 
         private String password;
 
+        @JsonProperty
         public String getUsername()
         {
             return username;
@@ -178,6 +146,7 @@ public class HomeController {
             this.username = username;
         }
 
+        @JsonProperty
         public String getPassword()
         {
             return password;

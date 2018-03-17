@@ -37,13 +37,14 @@ public class UserPrincipal implements Principal, Cloneable, Serializable
     private String address;
     private String email;
     private List<String> roles;
-    private boolean isNonExpired;
-    private boolean isAccountEnabled;
+    private String isNonExpired;
+    private String isAccountEnabled;
+
 
     // for JwtUtils
     public UserPrincipal(long id, String username,
-                         boolean isNonExpired, List<String> roles,
-                         boolean isAccountEnabled) {
+                         List<String> roles, String isNonExpired,
+                         String isAccountEnabled) {
         this.id = id;
         this.username = username;
         this.roles = roles;
@@ -52,8 +53,8 @@ public class UserPrincipal implements Principal, Cloneable, Serializable
     }
 
     public UserPrincipal(long id, String username, String password,
-                         boolean isNonExpired, List<String> roles,
-                         boolean isAccountEnabled) {
+                         List<String> roles, String isNonExpired,
+                         String isAccountEnabled) {
         this.id = id;
         this.username = username;
         this.password = password.getBytes(StandardCharsets.UTF_8);
@@ -170,20 +171,28 @@ public class UserPrincipal implements Principal, Cloneable, Serializable
         this.roles = roles;
     }
 
-    public boolean isNonExpired() {
+    @Basic
+    @Column(name = "IsNonExpired")
+    @XmlElement
+    @JsonProperty
+    public String getIsNonExpired() {
         return isNonExpired;
     }
 
-    public void setNonExpired(boolean nonExpired) {
-        isNonExpired = nonExpired;
+    public void setIsNonExpired(String isNonExpired) {
+        this.isNonExpired = isNonExpired;
     }
 
-    public boolean isAccountEnabled() {
+    @Basic
+    @Column(name = "IsAccountEnabled")
+    @XmlElement
+    @JsonProperty
+    public String getIsAccountEnabled() {
         return isAccountEnabled;
     }
 
-    public void setAccountEnabled(boolean accountEnabled) {
-        isAccountEnabled = accountEnabled;
+    public void setIsAccountEnabled(String isAccountEnabled) {
+        this.isAccountEnabled = isAccountEnabled;
     }
 
     @Override

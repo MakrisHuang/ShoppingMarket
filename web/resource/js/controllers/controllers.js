@@ -99,6 +99,32 @@ angular.module('Store', ['ngCookies'])
 
     return service;
 }])
+.controller('LoginController', ['$scope', '$http', '$cookies', function($scope, $http, $cookies){
+    this.submitLogin = function(){
+        if (this.username !== null || this.password !== null){
+            var loginInfo = {'username': this.username, 'password': this.password};
+            return $http({
+                method: 'POST',
+                url: 'http://localhost:8080/services/Rest/login',
+                data: loginInfo
+            }).then(
+                function (response){
+                    console.log("response: ");
+                    console.log(response);
+
+                    $cookies.put('secret', response.data);
+                        $('#loginModal').modal('hide');
+
+                },
+                function (err){
+                    console.log('Error in login with username: ' + this.username);
+                }
+            )
+        }
+    }
+
+
+}])
 .controller('ShoppingItemController', ['CartHelper', '$scope', '$http', '$location',
     '$window', '$cookies', function (CartHelper, $scope, $http, $location, $window, $cookies) {
     $scope.cartHelper = CartHelper;

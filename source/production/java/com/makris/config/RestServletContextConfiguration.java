@@ -3,6 +3,7 @@ package com.makris.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.makris.config.annotation.RestEndpoint;
 import com.makris.config.annotation.RestEndpointAdvice;
+import com.makris.site.security.JwtUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationContext;
@@ -136,5 +137,10 @@ public class RestServletContextConfiguration extends WebMvcConfigurerAdapter
     public LocaleResolver localeResolver()
     {
         return new AcceptHeaderLocaleResolver();
+    }
+
+    @Bean
+    public JwtUtils jwtUtils(){
+        return new JwtUtils();
     }
 }
