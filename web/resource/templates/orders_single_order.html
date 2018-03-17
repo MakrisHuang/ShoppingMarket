@@ -1,0 +1,29 @@
+<section ng-controller="OrderSingleController as singleCtrl">
+    <h3>OrderId: ${orderId}</h3>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">Item Name</th>
+            <th scope="col">Price</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Total</th>
+        </tr>
+        </thead>
+        <tbody ng-repeat="item in finishOrder.items">
+        <tr>
+            <td>{{item.shoppingItem.name}}</td>
+            <td>{{item.shoppingItem.price}}</td>
+            <td>{{item.amount}}</td>
+            <td>{{item.shoppingItem.price * item.amount}}</td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+            <th>Total Price</th>
+            <th></th>
+            <th></th>
+            <th>{{getOrderTotalPrice()}}</th>
+        </tr>
+        </tfoot>
+    </table>
+</section>

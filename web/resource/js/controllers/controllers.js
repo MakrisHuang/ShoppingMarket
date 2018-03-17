@@ -1,4 +1,16 @@
-angular.module('Store', ['ngCookies'])
+angular.module('Store', ['ngCookies', 'ngRoute'])
+.config(function($routeProvider){
+    $routeProvider
+        .when('/', {
+            templateUrl: 'resource/templates/items.html',
+            controller: 'ShoppingItemController'
+        })
+        .when('/cart', {
+            templateUrl: 'resource/templates/cart.html',
+            controller: 'CartController'
+        })
+        .otherwise({ redirectTo: '/'});
+})
 .service('JwtHelper', ['$cookies', function($http, $cookies){
     return {
         // General helper function
@@ -99,6 +111,28 @@ angular.module('Store', ['ngCookies'])
 
     return service;
 }])
+.factory('ShoppingService', ['$http', function($http){
+    var shoppingItems = [];
+
+    return {
+        fetchShoppingItems: function (page, category, size) {
+            var url = '/services/Rest/shopping?page=' + page
+                + "&category=" + category + "&size=" + size;
+            $http.get(url).then(function (response) {
+                shoppingItems = response.data["content"];
+                console.log(shoppingItems);
+
+            }, function (err) {
+                if (err) {
+                    console.log("Error fetch shopping items");
+                }
+            });
+        },
+        getItems: function(){
+            return shoppingItems;
+        }
+    }
+}])
 .controller('LoginController', ['$scope', '$http', '$cookies', function($scope, $http, $cookies){
     this.submitLogin = function(){
         if (this.username !== null || this.password !== null){
@@ -125,43 +159,20 @@ angular.module('Store', ['ngCookies'])
 
 
 }])
-.controller('ShoppingItemController', ['CartHelper', '$scope', '$http', '$location',
-    '$window', '$cookies', function (CartHelper, $scope, $http, $location, $window, $cookies) {
-    $scope.cartHelper = CartHelper;
-
-    $scope.shoppingItems = [
-
-    ];
+.controller('CategoryController', ['ShoppingService', '$scope',
+    function(ShoppingService, $scope){
+    $scope.shoppingService = ShoppingService;
 
     $scope.updateContent = function(page, category, size){
-        console.log("location: " + window.location.pathname);
-
-        if (window.location.pathname !== '/'){
-            // then redirect to main page for loading jsp file
-            $window.location.href = '/';
-        }else{
-            $scope.fetchShoppingItems(page, category, size);
-        }
+        $scope.shoppingService.fetchShoppingItems(page, category, size);
     };
 
-    $scope.fetchShoppingItems = function (page, category, size) {
-        if (window.location.pathname === '/') {
-            var url = '/services/Rest/shopping?page=' + page
-                + "&category=" + category + "&size=" + size;
-            $http.get(url).then(function (response) {
-                $scope.shoppingItems = response.data["content"];
-                console.log($scope.shoppingItems);
-
-                window.history.replaceState({}, document.title, "/");
-            }, function (err) {
-                if (err) {
-                    console.log("Error fetch shopping items");
-                }
-            });
-        }
-    };
-
-    $scope.fetchShoppingItems(0, 'pc', 3);
+    $scope.shoppingService.fetchShoppingItems(0, 'pc', 3);
+}])
+.controller('ShoppingItemController', ['CartHelper', 'ShoppingService', '$scope',
+    function (CartHelper, ShoppingService, $scope) {
+    $scope.cartHelper = CartHelper;
+    $scope.shoppingService = ShoppingService;
 
     $scope.addItemToCart = function (item) {
         $scope.cartHelper.addToCart(item);

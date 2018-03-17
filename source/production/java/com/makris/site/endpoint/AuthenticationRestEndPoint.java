@@ -62,4 +62,6 @@ public class AuthenticationRestEndPoint {
         model.put("loginFailed", false);
         return JwtUtils.defaultSecret;
     }
+
+
 }

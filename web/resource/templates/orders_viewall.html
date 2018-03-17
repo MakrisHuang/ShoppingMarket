@@ -1,0 +1,24 @@
+<section ng-controller="OrdersViewallController">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">Order Id</th>
+            <th scope="col">Date Created</th>
+            <th scope="col">Status</th>
+            <th scope="col">Payment Status</th>
+            <th scope="col">Price</th>
+            <th scope="col">Ask Question</th>
+        </tr>
+        </thead>
+        <tbody ng-repeat="order in orders">
+        <tr>
+            <td>{{order.id}} <a href="/orders/{{order.id}}">(Check it)</a></td>
+            <td>{{order.dateCreated}}</td>
+            <td>{{order.status}}</td>
+            <td>{{order.paymentStatus}}</td>
+            <td>{{order.price}}</td>
+            <td><a href="#">Ask Question</a></td>
+        </tr>
+        </tbody>
+    </table>
+</section>

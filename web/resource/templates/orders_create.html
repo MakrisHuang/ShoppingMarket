@@ -1,0 +1,32 @@
+<section ng-controller="OrdersCreateController">
+    <h3>Your New Order</h3>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">Item Name</th>
+            <th scope="col">Price</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Total</th>
+        </tr>
+        </thead>
+        <tbody ng-repeat="item in temporaryOrder.items">
+        <tr>
+            <td>{{item.shoppingItem.name}}</td>
+            <td>{{item.shoppingItem.price}}</td>
+            <td>{{item.amount}}</td>
+            <td>{{item.shoppingItem.price * item.amount}}</td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+            <th>Total Price</th>
+            <th></th>
+            <th></th>
+            <th>{{getOrderTotalPrice()}}</th>
+        </tr>
+        </tfoot>
+    </table>
+    <div>
+        <button class="btn btn-success btn float-sm-right" ng-click="sendOrder()">Send out order</button>
+    </div>
+</section>

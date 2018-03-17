@@ -1,0 +1,34 @@
+<section ng-controller="CartController">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">Item Name</th>
+            <th scope="col">Available Status</th>
+            <th scope="col">Price</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Subtotal</th>
+            <th scope="col">Action</th>
+        </tr>
+        </thead>
+        <tbody ng-repeat="item in cartHelper.cart.cartItems">
+        <tr>
+            <td>{{item.shoppingItem.name}}</td>
+            <td>{{item.availableStatus}}</td>
+            <td>{{item.shoppingItem.price}}</td>
+            <td>
+                <span class="oi oi-plus" ng-click="increaseAmount(item)"></span>
+                {{item.amount}}
+                <span class="oi oi-minus" ng-click="decreaseAmount(item)"></span>
+            </td>
+            <td>{{item.shoppingItem.price * item.amount}}</td>
+            <td>
+                <button class="btn btn-danger btn-sm" ng-click="deleteItemInCart(item.shoppingItem, $index)"><spring:message code="cart.cancel"/></button>
+            </td>
+        </tr>
+        </tbody>
+        <caption>Total Price : {{getCartTotalPrice()}}</caption>
+    </table>
+    <div>
+        <button class="btn btn-success btn float-sm-right" ng-click="checkOut(cartHelper.cart)">Check Out</button>
+    </div>
+</section>

@@ -18,10 +18,6 @@
             <c:out value="${fn:trim(htmlTitle)}" /></title>
 
         <!--Bootstrap and jquery-->
-
-        <%--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>--%>
-        <%--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js"></script>--%>
-        <%--<script src="<c:url value="/resource/js/popper.min.js" />"></script>--%>
         <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
@@ -42,14 +38,11 @@
         <link rel="stylesheet" href="<c:url value="/resource/stylesheet/dashboard.css" />" />
         <link rel="stylesheet" href="<c:url value="/resource/stylesheet/open-iconic/font/css/open-iconic-bootstrap.css"/>"/>
 
-        <script src="/resource/js/app.js"></script>
+        <script src="<c:url value="/resource/js/app.js"/>"></script>
 
         <%--controller--%>
         <script src="<c:url value="/resource/js/controllers/controllers.js"/>"></script>
 
-        <script type="text/javascript" lang="javascript">
-
-        </script>
     </head>
     <body>
         <header>
@@ -200,9 +193,9 @@
         </header>
 
         <div class="container-fluid">
-            <div class="row" ng-controller="ShoppingItemController as itemCtrl">
+            <div class="row">
                 <nav class="col-sm-3 col-md-2 d-none d-sm-block bg-light sidebar"
-                     >
+                     ng-controller="CategoryController">
                     <ul class="nav nav-pills flex-column">
                         <!-- 商品專區 -->
                         <li class="nav-item">
@@ -218,6 +211,7 @@
 
                 <main role="main" class="col-sm-9 ml-sm-auto col-md-10 pt-3">
                     <jsp:doBody/>
+                    <div ng-view></div>
                 </main>
             </div>
         </div>

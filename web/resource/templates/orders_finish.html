@@ -1,0 +1,22 @@
+<section ng-controller="OrdersFinishController">
+    <h3 id="orderId" ng-hide="true">${orderId}</h3>
+    <h3>Thanks for Your Ordering!</h3>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Order Id</th>
+            <th>Check order</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>${orderId}</td>
+            <td>
+                <button class="btn btn-info float-sm-left" ng-click="checkOrderContent()">
+                    Check Order
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</section>
