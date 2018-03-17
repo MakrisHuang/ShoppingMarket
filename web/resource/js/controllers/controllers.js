@@ -9,24 +9,71 @@ angular.module('Store', ['ngCookies', 'ngRoute'])
             templateUrl: 'resource/templates/cart.html',
             controller: 'CartController'
         })
+        .when('/orders/viewall', {
+            templateUrl: 'resource/templates/orders_viewall.html',
+            controller: 'OrdersViewallController'
+        })
+        .when('/orders/create', {
+            templateUrl: 'resource/templates/orders_create.html',
+            controller: 'OrdersCreateController'
+        })
+        .when('/orders/finish', {
+            templateUrl: 'resource/templates/orders_finish_html',
+            controller: 'OrdersFinishController'
+        })
         .otherwise({ redirectTo: '/'});
 })
-.service('JwtHelper', ['$cookies', function($http, $cookies){
+.factory('AuthService', ['$http', '$cookies', function($http, $cookies){
+    return {
+        getSecret: function(){
+            return $cookies.get('secret');
+        },
+        setSecret: function(secret){
+            $cookies.put('secret', secret);
+        },
+        removeSecret: function(){
+            $cookies.remove('secret');
+        },
+        isLogin: function(){
+            return ($cookies.get('secret') !== undefined) ? true : false;
+        },
+        setUser: function(user){
+            var expireDate = new Date();
+            expireDate.setDate(expireDate.getDate() + 1);
+            $cookies.putObject('user',user, expireDate);
+        },
+        removeUser: function(user){
+            $cookies.remove('user');
+        },
+        getUser: function(){
+            return $cookies.getObject('user');
+        }
+    }
+}])
+.service('JwtHelper', ['AuthService', function(AuthService){
     return {
         // General helper function
+        base64url: function(source) {
+            // Encode in classical base64
+            var encodedSource = CryptoJS.enc.Base64.stringify(source);
+
+            encodedSource = encodedSource.replace(/=+$/, '');
+            encodedSource = encodedSource.replace(/\+/g, '-');
+            encodedSource = encodedSource.replace(/\//g, '_');
+            return encodedSource;
+        },
         generateHeader: function(headerMap){
-            var stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(headerMap));
-            return btoa(stringifiedHeader);
+            return this.base64url(CryptoJS.enc.Utf8.parse(JSON.stringify(headerMap)));
         },
         generatePayload: function(payloadMap){
-            var stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(payloadMap));
-            return btoa(stringifiedHeader);
+            return this.base64url(CryptoJS.enc.Utf8.parse(JSON.stringify(payloadMap)));;
         },
         generateToken: function(payloadMap){
-            var header = {"typ": "JWT", "alg": "HS256"};
+            var header = {"alg": "HS256", "typ": "JWT"};
             var token = this.generateHeader(header) + "." + this.generatePayload(payloadMap);
+            console.log(this.getSecret());
             var signature = CryptoJS.HmacSHA256(token, this.getSecret());
-            signature = btoa(signature);
+            signature = this.base64url(signature);
 
             var signedToken = token + "." + signature;
             return signedToken;
@@ -35,12 +82,8 @@ angular.module('Store', ['ngCookies', 'ngRoute'])
         decodeToken: function (token) {
             return jwt_decode(token);
         },
-        storeSecret: function(token){
-            var decoded = this.decodeToken(token);
-            $cookies.put('secret', decoded['secret']);
-        },
         getSecret: function(){
-            return $cookies.get('secret');
+            return AuthService.getSecret();
         }
     };
 }])
@@ -49,12 +92,12 @@ angular.module('Store', ['ngCookies', 'ngRoute'])
         cart: {},
 
         addToCart: function(shoppingItem){
-            // var encodedShoppingItem = JwtHelper.generateToken(shoppingItem);
+            var encodedShoppingItem = JwtHelper.generateToken(shoppingItem);
             return $http({
                 method: 'POST',
                 url: 'http://localhost:8080/services/Rest/cart/add',
                 headers: {'Content-Type':'application/json'},
-                data: shoppingItem
+                data: encodedShoppingItem
             }).then(
                 function (response) {
                     this.cart = response.data;
@@ -133,8 +176,12 @@ angular.module('Store', ['ngCookies', 'ngRoute'])
         }
     }
 }])
-.controller('LoginController', ['$scope', '$http', '$cookies', function($scope, $http, $cookies){
-    this.submitLogin = function(){
+.controller('AuthController', ['AuthService', '$scope', '$http',
+    function(AuthService, $scope, $http){
+    $scope.authService = AuthService;
+    $scope.user = $scope.authService.getUser();
+
+    $scope.submitLogin = function(){
         if (this.username !== null || this.password !== null){
             var loginInfo = {'username': this.username, 'password': this.password};
             return $http({
@@ -143,34 +190,71 @@ angular.module('Store', ['ngCookies', 'ngRoute'])
                 data: loginInfo
             }).then(
                 function (response){
-                    console.log("response: ");
-                    console.log(response);
+                    if (response.status === 200){
+                        // get secret from header
+                        $scope.authService.setSecret(response.headers('secret'));
+                        $scope.authService.setUser(response.data);
 
-                    $cookies.put('secret', response.data);
                         $('#loginModal').modal('hide');
-
+                        $('#navbarsExampleDefault').collapse('hide');
+                    }
                 },
                 function (err){
-                    console.log('Error in login with username: ' + this.username);
+                    console.log('Error in login with username: ' + $scope.authService.getUser().username);
                 }
             )
         }
+    };
+
+    $scope.submitRegister = function(){
+        var registerInfo = {
+            'username': this.username,
+            'password': this.password,
+            'email': this.email,
+            'telphone': this.telphone,
+            'address': this.address
+        };
+        return $http({
+            method: 'POST',
+            url: 'http://localhost:8080/services/Rest/register',
+            data: registerInfo
+        }).then(
+            function (response){
+                if (response.status === 200){
+                    $scope.user = response.data;
+
+                    // get secret from header
+                    $scope.authService.setSecret(response.headers('secret'));
+                    $scope.authService.setUser(response.data);
+
+                    $('#registerModal').modal('hide');
+                    $('#navbarsExampleDefault').collapse('hide');
+                }
+            },
+            function (err){
+                console.log('Error in login with username: ' + $scope.authService.getUser().username);
+            }
+        )
+    };
+
+    $scope.logout = function(){
+        $scope.authService.removeSecret();
+        $scope.authService.removeUser();
     }
-
-
 }])
-.controller('CategoryController', ['ShoppingService', '$scope',
-    function(ShoppingService, $scope){
+.controller('CategoryController', ['ShoppingService', '$scope', '$location',
+    function(ShoppingService, $scope, $location){
     $scope.shoppingService = ShoppingService;
 
     $scope.updateContent = function(page, category, size){
+        $location.path("/");
         $scope.shoppingService.fetchShoppingItems(page, category, size);
     };
 
     $scope.shoppingService.fetchShoppingItems(0, 'pc', 3);
 }])
-.controller('ShoppingItemController', ['CartHelper', 'ShoppingService', '$scope',
-    function (CartHelper, ShoppingService, $scope) {
+.controller('ShoppingItemController', ['CartHelper', 'ShoppingService', '$scope', '$cookies',
+    function (CartHelper, ShoppingService, $scope, $cookies) {
     $scope.cartHelper = CartHelper;
     $scope.shoppingService = ShoppingService;
 
@@ -178,13 +262,21 @@ angular.module('Store', ['ngCookies', 'ngRoute'])
         $scope.cartHelper.addToCart(item);
     };
 }])
-.controller('CartController', ['$scope', '$http', '$window', 'CartHelper',
-    function ($scope, $http, $window, CartHelper) {
+.controller('CartController', ['JwtHelper', '$scope', '$http', '$window', 'CartHelper', 'AuthService',
+    function (JwtHelper, $scope, $http, $window, CartHelper, AuthService) {
     $scope.cartHelper = CartHelper;
+    $scope.jwtHelper = JwtHelper;
+    $scope.authService = AuthService;
 
     $scope.fetchCart = function(){
-        var url = "/services/Rest/cart/view";
-        $http.get(url).then(function(response){
+        var encoded = $scope.jwtHelper.generateToken($scope.authService.getUser());
+        console.log(encoded);
+        $http({
+            method: 'POST',
+            url: "http://localhost:8080/services/Rest/cart/viewall",
+            headers: {'Content-Type': 'application/json'},
+            data: {"token": encoded}
+        }).then(function(response){
             console.log(response.data);
             $scope.cartHelper.cart = response.data;
         }, function (err) {
@@ -240,7 +332,7 @@ angular.module('Store', ['ngCookies', 'ngRoute'])
             method: 'POST',
             url: 'http://localhost:8080/services/Rest/orders/create',
             headers: {'Content-Type':'application/json'},
-            data: cart
+            data: $scope.jwtHelper.generateToken(cart)
         }).then(
             function(response){
                 $window.location.href = '/orders?action=create';

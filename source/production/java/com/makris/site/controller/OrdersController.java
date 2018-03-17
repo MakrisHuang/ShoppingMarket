@@ -37,8 +37,6 @@ public class OrdersController {
             model.put("userName", customer.getName());
             model.put("loginFailed", false);
         }
-        model.put("loginForm", new HomeController.LoginForm());
-        model.put("registerForm", new HomeController.RegisterForm());
 
         switch (action){
             case "viewall":
@@ -69,8 +67,6 @@ public class OrdersController {
             model.put("userName", customer.getName());
             model.put("loginFailed", false);
         }
-        model.put("loginForm", new HomeController.LoginForm());
-        model.put("registerForm", new HomeController.RegisterForm());
 
         // put requested order id again
         model.put("orderId", orderId);

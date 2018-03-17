@@ -1,10 +1,13 @@
 package com.makris.site.endpoint;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.makris.config.annotation.RestEndpoint;
 import com.makris.site.entities.Cart;
 import com.makris.site.entities.CartItem;
 import com.makris.site.entities.ShoppingItem;
 import com.makris.site.entities.UserPrincipal;
+import com.makris.site.security.JwtUtils;
 import com.makris.site.service.CartService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,29 +26,22 @@ public class CartRestEndPoint {
 
     @Inject
     CartService cartService;
+    @Inject
+    JwtUtils jwtUtils;
 
     private static final Logger logger = LogManager.getLogger();
 
-    @RequestMapping(value = "cart/view", method = RequestMethod.GET)
-    public Cart viewCart(HttpServletRequest request){
-        HttpSession session = request.getSession();
-        UserPrincipal customer = (UserPrincipal)session.getAttribute(UserPrincipal.SESSION_ATTRIBUTE_KEY);
-
+    @RequestMapping(value = "cart/viewall", method = RequestMethod.POST)
+    public Cart viewCart(@RequestBody Token token){
+        UserPrincipal customer = jwtUtils.getUserFromToken(token.getToken(), false);
         if (customer != null){
             return this.cartService.findCartByCustomer(customer);
         }
         return null;
     }
 
-
     @RequestMapping(value = "cart/add", method = RequestMethod.POST)
-    public Cart addItemToCart(@RequestBody ShoppingItem shoppingItem,
-                             HttpServletRequest request){
-        HttpSession session = request.getSession();
-        UserPrincipal customer = (UserPrincipal)session.getAttribute(UserPrincipal.SESSION_ATTRIBUTE_KEY);
-
-        logger.info("[cart/add] shoppingItem: ");
-        logger.info(shoppingItem);
+    public Cart addItemToCart(@RequestBody Token token){
 
         if (customer != null){
             Cart cart = this.cartService.findCartByCustomer(customer);
@@ -93,6 +89,24 @@ public class CartRestEndPoint {
             return cart;
         }else{
             return null;
+        }
+    }
+
+    @JsonAutoDetect(creatorVisibility = JsonAutoDetect.Visibility.NONE,
+            fieldVisibility = JsonAutoDetect.Visibility.NONE,
+            getterVisibility = JsonAutoDetect.Visibility.NONE,
+            isGetterVisibility = JsonAutoDetect.Visibility.NONE,
+            setterVisibility = JsonAutoDetect.Visibility.NONE)
+    public static class Token{
+        private String token;
+
+        @JsonProperty
+        public String getToken() {
+            return token;
+        }
+
+        public void setToken(String token) {
+            this.token = token;
         }
     }
 }

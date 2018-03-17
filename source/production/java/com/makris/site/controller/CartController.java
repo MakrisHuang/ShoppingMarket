@@ -41,8 +41,6 @@ public class CartController {
         else {
             model.put("loginFailed", true);
         }
-        model.put(ATTR_FORM_LOGIN, new HomeController.LoginForm());
-        model.put(ATTR_FORM_REGISTER, new HomeController.RegisterForm());
         return new ModelAndView(JSP_CART);
     }
 }

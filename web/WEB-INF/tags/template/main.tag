@@ -3,11 +3,6 @@
               required="true" %>
 <%@ attribute name="bodyTitle" type="java.lang.String" rtexprvalue="true"
               required="true" %>
-<%@ attribute name="loginFailed" type="java.lang.Boolean" rtexprvalue="true" %>
-<%@ attribute name="userName" type="java.lang.String" rtexprvalue="true" %>
-
-
-<%--@elvariable id="registerForm" type="com.makris.site.controller.HomeController.RegisterForm" --%>
 
 <%@ attribute name="registerFragment" fragment="true" required="false" %>
 <%@ include file="/WEB-INF/jsp/base.jspf" %>
@@ -33,6 +28,7 @@
         <%--Security--%>
         <script src="<c:url value="/resource/js/security/jwt-decode.min.js"/>"></script>
         <script src="<c:url value="/resource/js/security/hmac-sha256.js"/>"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/enc-base64-min.js"></script>
 
         <!-- customized -->
         <link rel="stylesheet" href="<c:url value="/resource/stylesheet/dashboard.css" />" />
@@ -45,7 +41,7 @@
 
     </head>
     <body>
-        <header>
+        <header ng-controller="AuthController">
             <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
                 <a class="navbar-brand" href="/"><spring:message code="title.company"/></a>
                 <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
@@ -55,35 +51,30 @@
                 <%-- collapse navbar--%>
                 <div class="collapse navbar-collapse" id="navbarsExampleDefault">
                     <ul class="navbar-nav mr-auto">
-                        <c:choose>
-                            <c:when test="${loginFailed}">
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#" data-toggle="modal" data-target="#loginModal"><spring:message code="title.login"/></a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#" data-toggle="modal" data-target="#registerModal"><spring:message code="title.register"/></a>
-                                </li>
-                            </c:when>
-                            <c:otherwise>
-                                <li class="nav-item">
-                                    <span class="navbar-text"><spring:message code="title.welcome"/> , <c:out value="${userName}"/></span>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="<c:url value="/logout" />"><spring:message code="nav.item.logout" /></a>
-                                </li>
-                                <!-- collapse profile -->
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <spring:message code="title.profile" />
-                                    </a>
-                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" href="<c:url value="/profile"/>"><spring:message code="title.profile.basic"/></a>
-                                        <a class="dropdown-item" href="<c:url value="/orders?action=viewall" />"><spring:message code="title.profile.orders.viewall" /></a>
-                                        <a class="dropdown-item" href="<c:url value="/cart"/>"><spring:message code="title.profile.cart"/></a>
-                                    </div>
-                                </li>
-                            </c:otherwise>
-                        </c:choose>
+                        <li class="nav-item" ng-hide="authService.isLogin()">
+                            <a class="nav-link" href="#" data-toggle="modal" data-target="#loginModal"><spring:message code="title.login"/></a>
+                        </li>
+                        <li class="nav-item" ng-hide="authService.isLogin()">
+                            <a class="nav-link" href="#" data-toggle="modal" data-target="#registerModal"><spring:message code="title.register"/></a>
+                        </li>
+
+                        <li class="nav-item" ng-show="authService.isLogin()">
+                            <span class="navbar-text"><spring:message code="title.welcome"/> , {{user.username}}</span>
+                        </li>
+                        <li class="nav-item" ng-show="authService.isLogin()" ng-click="logout()">
+                            <a class="nav-link" href=""><spring:message code="nav.item.logout" /></a>
+                        </li>
+                        <!-- collapse profile -->
+                        <li class="nav-item dropdown" ng-show="authService.isLogin()">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <spring:message code="title.profile" />
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="#!/profile"><spring:message code="title.profile.basic"/></a>
+                                <a class="dropdown-item" href="#!/orders/viewall"><spring:message code="title.profile.orders.viewall" /></a>
+                                <a class="dropdown-item" href="#!/cart"><spring:message code="title.profile.cart"/></a>
+                            </div>
+                        </li>
                     </ul>
                     <form class="form-inline mt-2 mt-md-0">
                         <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
@@ -93,8 +84,7 @@
             </nav>
 
             <!-- Login Modal -->
-            <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
-                ng-controller="LoginController as loginCtrl">
+            <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -104,7 +94,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <!-- do login jsp fragment -->
+
                             <spring:message code="message.login.instruction" /><br /><br />
                             <c:if test="${loginFailed}">
                                 <b class="errors"><spring:message code="error.login.failed" /></b><br />
@@ -119,24 +109,11 @@
                                 </div>
                             </c:if>
 
-                            <%--<form:form action="/login" method="post" modelAttribute="loginForm" >--%>
-                                <%--<form:label path="username"><spring:message code="field.login.username" /></form:label><br />--%>
-                                <%--<form:input path="username" /><br />--%>
-                                <%--<form:errors path="username" cssClass="errors" /><br />--%>
-                                <%--<form:label path="password"><spring:message code="field.login.password" /></form:label><br />--%>
-                                <%--<form:password path="password" /><br />--%>
-                                <%--<form:errors path="password" cssClass="errors" /><br />--%>
-
-                                <%--<div class="modal-footer">--%>
-                                    <%--<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>--%>
-                                    <%--<button type="submit" class="btn btn-primary"><spring:message code="field.login.submit" /></button>--%>
-                                <%--</div>--%>
-                            <%--</form:form>--%>
-                            <form ng-submit="loginCtrl.submitLogin()">
+                            <form ng-submit="submitLogin()">
                                 <label><spring:message code="field.login.username" /></label><br>
-                                <input type="text" ng-model="loginCtrl.username"><br>
+                                <input type="text" ng-model="username"><br>
                                 <label><spring:message code="field.login.password" /></label><br>
-                                <input type="text" ng-model="loginCtrl.password"><br><br>
+                                <input type="password" ng-model="password"><br><br>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                     <button type="submit" class="btn btn-primary"><spring:message code="field.login.submit" /></button>
@@ -160,32 +137,27 @@
                         </div>
                         <div class="modal-body">
                             <!-- do register jsp fragment -->
-                            <form:form action="/register" method="post" modelAttribute="registerForm">
-                                <form:label path="username"><spring:message code="field.register.username" /></form:label><br />
-                                <form:input path="username" /><br />
-                                <form:errors path="username" cssClass="errors" /><br />
+                            <form ng-submit="submitRegister()">
+                                <label><spring:message code="field.register.username" /></label><br />
+                                <input type="text" ng-model="username" /><br />
 
-                                <form:label path="password"><spring:message code="field.register.password" /></form:label><br />
-                                <form:password path="password" /><br />
-                                <form:errors path="password" cssClass="errors" /><br />
+                                <label><spring:message code="field.register.password" /></label><br />
+                                <input type="password" ng-model="password"/><br />
 
-                                <form:label path="email"><spring:message code="field.register.email" /></form:label><br />
-                                <form:input path="email" /><br />
-                                <form:errors path="email" cssClass="errors" /><br />
+                                <label><spring:message code="field.register.email" /></label><br />
+                                <input type="email" ng-model="email"/><br />
 
-                                <form:label path="telphone"><spring:message code="field.register.telphone" /></form:label><br />
-                                <form:input path="telphone" /><br />
-                                <form:errors path="telphone" cssClass="errors" /><br />
+                                <label><spring:message code="field.register.telphone" /></label><br />
+                                <input type="text" ng-model="telphone"/><br />
 
-                                <form:label path="address"><spring:message code="field.register.address" /></form:label><br />
-                                <form:input path="address" /><br />
-                                <form:errors path="address" cssClass="errors" /><br />
+                                <label><spring:message code="field.register.address" /></label><br />
+                                <input type="text" ng-model="address"/><br /><br />
 
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                     <button type="submit" class="btn btn-primary"><spring:message code="field.register.submit" /></button>
                                 </div>
-                            </form:form>
+                            </form>
                         </div>
                     </div>
                 </div>
