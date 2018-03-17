@@ -3,6 +3,7 @@ package com.makris.site.security;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.Claim;
+import com.makris.site.entities.UserPrincipal;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Test;
@@ -46,7 +47,7 @@ public class JwtUtilsTest {
         String token = jwtUtils.generateToken(user, "subject", 30);
         logger.info(token);
 
-        JwtUserPrincipal newUser = jwtUtils.getUserFromToken(token);
+        UserPrincipal newUser = jwtUtils.getUserFromToken(token, false);
         assertEquals(newUser.getUsername(), user.getUsername());
     }
 }

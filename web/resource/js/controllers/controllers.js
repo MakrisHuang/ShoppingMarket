@@ -13,7 +13,7 @@ angular.module('Store', ['ngCookies'])
         generateToken: function(payloadMap){
             var header = {"typ": "JWT", "alg": "HS256"};
             var token = this.generateHeader(header) + "." + this.generatePayload(payloadMap);
-            var signature = CryptoJS.HmacSHA256(token, this.getSecret(
+            var signature = CryptoJS.HmacSHA256(token, this.getSecret());
             signature = btoa(signature);
 
             var signedToken = token + "." + signature;
@@ -100,7 +100,7 @@ angular.module('Store', ['ngCookies'])
     return service;
 }])
 .controller('ShoppingItemController', ['CartHelper', '$scope', '$http', '$location',
-    '$window', function (CartHelper, $scope, $http, $location, $window) {
+    '$window', '$cookies', function (CartHelper, $scope, $http, $location, $window, $cookies) {
     $scope.cartHelper = CartHelper;
 
     $scope.shoppingItems = [

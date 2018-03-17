@@ -8,6 +8,8 @@ public interface AuthenticationService {
     // 驗證使用者是否為合法用戶
     UserPrincipal authenticateLogin(String username, String password);
 
+    UserPrincipal jwtAuthenticateLogin(String token);
+
     // 驗證在資料庫中有無該使用者存在，若無，回傳null
     boolean isEligibleForRegister(String email);
 

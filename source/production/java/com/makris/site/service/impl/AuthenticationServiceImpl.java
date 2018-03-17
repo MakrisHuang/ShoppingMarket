@@ -2,6 +2,7 @@ package com.makris.site.service.impl;
 
 import com.makris.site.entities.UserPrincipal;
 import com.makris.site.repositories.CustomerRepository;
+import com.makris.site.security.JwtUtils;
 import com.makris.site.service.AuthenticationService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,17 +38,39 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public UserPrincipal authenticateLogin(String username, String password) {
         UserPrincipal customer = this.customerRepository.getByUsername(username);
         if (customer == null){
-            logger.warn("Login failed for non-existent user {}", username);
+            logger.info("Login failed for non-existent user {}", username);
             return null;
         }
 
         if (!BCrypt.checkpw(password, new String (customer.getPassword(), StandardCharsets.UTF_8))){
             // 驗證失敗
-            logger.warn("Login failed for wrong password for user {}", username);
+            logger.info("Login failed for wrong password for user {}", username);
             return null;
         }
 
         logger.debug("User {} successfully authenticated", username);
+        return customer;
+    }
+
+    @Override
+    public UserPrincipal jwtAuthenticateLogin(String token) {
+        // get UserPrincipal from token
+        JwtUtils jwtUtils = new JwtUtils();
+        UserPrincipal jwtUser = jwtUtils.getUserFromToken(token, true);
+
+        // verify user info with database
+        UserPrincipal customer = this.customerRepository.getByUsername(jwtUser.getUsername());
+        if (customer == null){
+            logger.info("Login failed for non-existent user {}", jwtUser.getUsername());
+            return null;
+        }
+
+        if (!BCrypt.checkpw(jwtUser.getPasswordInStr(),
+                new String (customer.getPassword(), StandardCharsets.UTF_8))){
+            // 驗證失敗
+            logger.info("Login failed for wrong password for user {}", jwtUser.getUsername());
+            return null;
+        }
         return customer;
     }
 

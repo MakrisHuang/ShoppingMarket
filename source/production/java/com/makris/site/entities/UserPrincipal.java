@@ -9,7 +9,9 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 import java.security.Principal;
+import java.util.List;
 
 @Entity
 @Table(uniqueConstraints = {
@@ -28,18 +30,40 @@ public class UserPrincipal implements Principal, Cloneable, Serializable
     public static final String SESSION_ATTRIBUTE_KEY = "com.makris.user.principal";
 
     private long id;
-
     private String username;
-
     private byte[] password;
-
     private String telPhone;
-
     private String postCode;
-
     private String address;
-
     private String email;
+    private List<String> roles;
+    private boolean isNonExpired;
+    private boolean isAccountEnabled;
+
+    // for JwtUtils
+    public UserPrincipal(long id, String username,
+                         boolean isNonExpired, List<String> roles,
+                         boolean isAccountEnabled) {
+        this.id = id;
+        this.username = username;
+        this.roles = roles;
+        this.isNonExpired = isNonExpired;
+        this.isAccountEnabled = isAccountEnabled;
+    }
+
+    public UserPrincipal(long id, String username, String password,
+                         boolean isNonExpired, List<String> roles,
+                         boolean isAccountEnabled) {
+        this.id = id;
+        this.username = username;
+        this.password = password.getBytes(StandardCharsets.UTF_8);
+        this.roles = roles;
+        this.isNonExpired = isNonExpired;
+        this.isAccountEnabled = isAccountEnabled;
+    }
+
+    public UserPrincipal() {
+    }
 
     @Id
     @Column(name = "UserId")
@@ -81,6 +105,11 @@ public class UserPrincipal implements Principal, Cloneable, Serializable
     public byte[] getPassword()
     {
         return this.password;
+    }
+
+    @Transient
+    public String getPasswordInStr(){
+        return new String(this.password, StandardCharsets.UTF_8);
     }
 
     public void setPassword(byte[] password)
@@ -130,6 +159,31 @@ public class UserPrincipal implements Principal, Cloneable, Serializable
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Transient
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
+    }
+
+    public boolean isNonExpired() {
+        return isNonExpired;
+    }
+
+    public void setNonExpired(boolean nonExpired) {
+        isNonExpired = nonExpired;
+    }
+
+    public boolean isAccountEnabled() {
+        return isAccountEnabled;
+    }
+
+    public void setAccountEnabled(boolean accountEnabled) {
+        isAccountEnabled = accountEnabled;
     }
 
     @Override

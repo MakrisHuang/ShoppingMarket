@@ -2,6 +2,7 @@ package com.makris.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.makris.config.annotation.WebController;
+import com.makris.site.security.JwtUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationContext;
@@ -182,5 +183,10 @@ public class WebServletContextConfiguration extends WebMvcConfigurerAdapter
     public MultipartResolver multipartResolver()
     {
         return new StandardServletMultipartResolver();
+    }
+
+    @Bean
+    public JwtUtils jwtUtils(){
+        return new JwtUtils();
     }
 }
