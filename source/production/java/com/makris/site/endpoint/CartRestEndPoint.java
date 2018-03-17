@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 @RestEndpoint
 @ResponseBody
@@ -41,8 +40,8 @@ public class CartRestEndPoint {
     }
 
     @RequestMapping(value = "cart/add", method = RequestMethod.POST)
-    public Cart addItemToCart(@RequestBody Token token){
-
+    public Cart addItemToCart(HttpServletRequest request, @RequestBody ShoppingItem shoppingItem){
+        UserPrincipal customer = jwtUtils.getUserFromHttpRequest(request, false);
         if (customer != null){
             Cart cart = this.cartService.findCartByCustomer(customer);
             if (cart == null) cart = new Cart();
@@ -59,8 +58,7 @@ public class CartRestEndPoint {
     @RequestMapping(value = "cart/update", method = RequestMethod.POST)
     public Cart updateItemInCart(@RequestBody CartItem newCartItem,
                            HttpServletRequest request){
-        HttpSession session = request.getSession();
-        UserPrincipal customer = (UserPrincipal)session.getAttribute(UserPrincipal.SESSION_ATTRIBUTE_KEY);
+        UserPrincipal customer = jwtUtils.getUserFromHttpRequest(request, false);
 
         logger.info("[cart/update] cartItem: ");
         logger.info(newCartItem.toString());
@@ -77,8 +75,7 @@ public class CartRestEndPoint {
     @RequestMapping(value = "cart/delete", method = RequestMethod.POST)
     public Cart deleteItemInCart(@RequestBody ShoppingItem shoppingItem,
                                  HttpServletRequest request){
-        HttpSession session = request.getSession();
-        UserPrincipal customer = (UserPrincipal)session.getAttribute(UserPrincipal.SESSION_ATTRIBUTE_KEY);
+        UserPrincipal customer = jwtUtils.getUserFromHttpRequest(request, false);
 
         logger.info("[cart/delete] shoppingItem: ");
         logger.info(shoppingItem);

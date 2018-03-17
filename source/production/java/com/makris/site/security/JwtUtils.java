@@ -12,20 +12,20 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 public class JwtUtils {
     public static final String ROLE_REFRESH_TOKEN = "ROLE_REFRESH_TOKEN";
 
     private static final String ISSUER = "auth0";
-    private static final String CLAIM_KEY_USER_ID = "userId";
+    private static final String CLAIM_KEY_USER_ID = "id";
     private static final String CLAIM_KEY_USRE_NAME = "username";
     private static final String CLAIM_KEY_USER_PASSWORD = "password";
     private static final String CLAIM_KEY_AUTHORITIES = "scope";
-    private static final String CLAIM_KEY_ACCOUNT_ENABLED = "enabled";
-    private static final String CLAIM_KEY_ACCOUNT_NON_EXPIRED = "nonExpired";
+    private static final String CLAIM_KEY_ACCOUNT_ENABLED = "isAccountEnabled";
+    private static final String CLAIM_KEY_ACCOUNT_NON_EXPIRED = "isNonExpired";
     private static final String CLAIM_KEY_EXPIRATION = "expiration";
 
     private static final Logger logger = LogManager.getLogger();
@@ -44,23 +44,22 @@ public class JwtUtils {
             final Map<String, Claim> claimMap = this.getPayloadClaimsFromToken(token);
             long userId = claimMap.get(CLAIM_KEY_USER_ID).asLong();
             String username = claimMap.get(CLAIM_KEY_USRE_NAME).asString();
-            List<String> roles = claimMap.get(CLAIM_KEY_AUTHORITIES).asList(String.class);
+//            List<String> roles = claimMap.get(CLAIM_KEY_AUTHORITIES).asList(String.class);
             String isNonExpired = claimMap.get(CLAIM_KEY_ACCOUNT_NON_EXPIRED).asString();
             String isAccountEnabled = claimMap.get(CLAIM_KEY_ACCOUNT_ENABLED).asString();
 
             if (passwordNeeded){
                 String password = claimMap.get(CLAIM_KEY_USER_PASSWORD).asString();
-                user =  new UserPrincipal(userId, username, password,
-                        roles, isNonExpired, isAccountEnabled);
+                return new UserPrincipal(userId, username, password,
+                        null, isNonExpired, isAccountEnabled);
             }else {
-                user =  new UserPrincipal(userId, username,
-                        roles, isNonExpired, isAccountEnabled);
+                return new UserPrincipal(userId, username,
+                        null, isNonExpired, isAccountEnabled);
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            return user;
         }
+        return null;
     }
 
     // can be used for Test
@@ -88,10 +87,8 @@ public class JwtUtils {
 
     public DecodedJWT verifyToken(String token){
         try{
-            Algorithm algorithm = Algorithm.HMAC256(defaultSecret.getBytes());
-            JWTVerifier verifier = JWT.require(algorithm)
-                    .withIssuer(ISSUER)
-                    .build();
+            Algorithm algorithm = Algorithm.HMAC256(defaultSecret.getBytes(StandardCharsets.UTF_8));
+            JWTVerifier verifier = JWT.require(algorithm).build();
             DecodedJWT jwt = verifier.verify(token);
             return jwt;
         } catch(JWTVerificationException ex){

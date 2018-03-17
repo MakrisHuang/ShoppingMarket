@@ -30,10 +30,10 @@ public class JwtUtilsTest {
     @Test
     public void verifyToken() {
         JwtUtils jwtUtils = new JwtUtils();
-        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiaXNzIjoiYXV0aDAiLCJuYW1lIjoiSm9obiBEb2UifQ.SZqkoOzDi7z0DI4Iqx8q5dBtN-GcVT2-S9CNEf4gsB8";
-        Claim claim = jwtUtils.getPayloadClaimByKeyWithToken(token, "name");
+        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiIxMjMiLCJ0ZWxQaG9uZSI6IjEyMyIsInBvc3RDb2RlIjoiMTUzIiwiYWRkcmVzcyI6IjEyMyIsImVtYWlsIjoiMTIzQG1haWwuY29tIiwiaXNOb25FeHBpcmVkIjoiWSIsImlzQWNjb3VudEVuYWJsZWQiOiJZIn0.KSH8FCtnl2JKQlTKX-BvCZ05na7F0-1_8iHiU1AyIUY";
+        Claim claim = jwtUtils.getPayloadClaimByKeyWithToken(token, "username");
         String username = claim.asString();
-        assertEquals(username, "John Doe");
+        assertEquals(username, "123");
     }
 
     @Test

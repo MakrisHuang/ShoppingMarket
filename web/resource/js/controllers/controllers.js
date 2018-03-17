@@ -18,8 +18,12 @@ angular.module('Store', ['ngCookies', 'ngRoute'])
             controller: 'OrdersCreateController'
         })
         .when('/orders/finish', {
-            templateUrl: 'resource/templates/orders_finish_html',
+            templateUrl: 'resource/templates/orders_finish.html',
             controller: 'OrdersFinishController'
+        })
+        .when('/orders/:id', {
+            templateUrl: 'resource/templates/orders_single_order.html',
+            controller: 'OrdersSingleController'
         })
         .otherwise({ redirectTo: '/'});
 })
@@ -71,7 +75,6 @@ angular.module('Store', ['ngCookies', 'ngRoute'])
         generateToken: function(payloadMap){
             var header = {"alg": "HS256", "typ": "JWT"};
             var token = this.generateHeader(header) + "." + this.generatePayload(payloadMap);
-            console.log(this.getSecret());
             var signature = CryptoJS.HmacSHA256(token, this.getSecret());
             signature = this.base64url(signature);
 
@@ -87,22 +90,25 @@ angular.module('Store', ['ngCookies', 'ngRoute'])
         }
     };
 }])
-.factory('CartHelper', ['JwtHelper', '$http', function (JwtHelper, $http){
+.factory('CartHelper', ['JwtHelper', 'AuthService', '$http',
+    function (JwtHelper, AuthService, $http){
+    var cart = {};
+
     var service = {
-        cart: {},
 
         addToCart: function(shoppingItem){
-            var encodedShoppingItem = JwtHelper.generateToken(shoppingItem);
+            var jwtEncodedHeader = JwtHelper.generateToken(AuthService.getUser());
             return $http({
                 method: 'POST',
                 url: 'http://localhost:8080/services/Rest/cart/add',
-                headers: {'Content-Type':'application/json'},
-                data: encodedShoppingItem
+                headers: {'Content-Type':'application/json',
+                          'tokenHeader': jwtEncodedHeader},
+                data: shoppingItem
             }).then(
                 function (response) {
-                    this.cart = response.data;
+                    cart = response.data;
                     console.log("[(service) addToCart] cart: ");
-                    console.log(this.cart);
+                    console.log(cart);
 
                     alert("商品 " + shoppingItem.name + " 已加入購物車");
                 },
@@ -114,16 +120,18 @@ angular.module('Store', ['ngCookies', 'ngRoute'])
         },
 
         updateItemInCart: function (cartItem) {
+            var encodedUser = JwtHelper.generateToken(AuthService.getUser());
             return $http({
                 method: 'POST',
                 url: 'http://localhost:8080/services/Rest/cart/update',
-                headers: {'Content-Type':'application/json'},
+                headers: {'Content-Type':'application/json',
+                          'tokenHeader': encodedUser},
                 data: cartItem
             }).then(
                 function (response) {
-                    this.cart = response.data;
+                    cart = response.data;
                     console.log("[(service) updateItemInCart] cart: ");
-                    console.log(this.cart);
+                    console.log(cart);
                 },
                 function (err) {
                     console.log("Error in updating shopping item to cart");
@@ -131,24 +139,34 @@ angular.module('Store', ['ngCookies', 'ngRoute'])
                 }
             );
         },
-
         deleteItemInCart: function (shoppingItem) {
+            var encodedUser = JwtHelper.generateToken(AuthService.getUser());
             return $http({
                 method: 'POST',
                 url: 'http://localhost:8080/services/Rest/cart/delete',
-                headers: {'Content-Type':'application/json'},
+                headers: {'Content-Type':'application/json',
+                    'tokenHeader': encodedUser},
                 data: shoppingItem
             }).then(
                 function (response) {
-                    this.cart = response.data;
+                    cart = response.data;
                     console.log("[(service) deleteItemInCart] cart: ");
-                    console.log(this.cart);
+                    console.log(cart);
                 },
                 function (err) {
                     console.log("Error in removing shopping item to cart");
                     console.log(err);
                 }
             );
+        },
+        getCartItems: function(){
+            return cart.cartItems;
+        },
+        setCart: function(newCart){
+            cart = newCart;
+        },
+        getCart: function(){
+            return cart;
         }
     };
 
@@ -262,15 +280,15 @@ angular.module('Store', ['ngCookies', 'ngRoute'])
         $scope.cartHelper.addToCart(item);
     };
 }])
-.controller('CartController', ['JwtHelper', '$scope', '$http', '$window', 'CartHelper', 'AuthService',
-    function (JwtHelper, $scope, $http, $window, CartHelper, AuthService) {
+.controller('CartController', ['JwtHelper', '$scope', '$http', '$window', 'CartHelper',
+    'AuthService', '$location', 'OrdersService', function (JwtHelper, $scope, $http, $window, CartHelper,
+                                          AuthService, $location, OrdersService) {
     $scope.cartHelper = CartHelper;
     $scope.jwtHelper = JwtHelper;
     $scope.authService = AuthService;
 
     $scope.fetchCart = function(){
         var encoded = $scope.jwtHelper.generateToken($scope.authService.getUser());
-        console.log(encoded);
         $http({
             method: 'POST',
             url: "http://localhost:8080/services/Rest/cart/viewall",
@@ -278,7 +296,7 @@ angular.module('Store', ['ngCookies', 'ngRoute'])
             data: {"token": encoded}
         }).then(function(response){
             console.log(response.data);
-            $scope.cartHelper.cart = response.data;
+            $scope.cartHelper.setCart(response.data);
         }, function (err) {
             if (err){
                 console.log("Error fetching cart");
@@ -297,7 +315,7 @@ angular.module('Store', ['ngCookies', 'ngRoute'])
     $scope.decreaseAmount = function (cartItem){
         cartItem.amount = cartItem.amount - 1;
         if (cartItem.amount === 0){
-            $scope.cartHelper.removeItemInCart(cartItem);
+            $scope.cartHelper.deleteItemInCart(cartItem);
             return;
         }
         $scope.cartHelper.updateItemInCart(cartItem);
@@ -309,8 +327,8 @@ angular.module('Store', ['ngCookies', 'ngRoute'])
 
     $scope.getCartTotalPrice = function (){
         var total = 0;
-        if ($scope.cartHelper.cart) {
-            angular.forEach($scope.cartHelper.cart.cartItems,
+        if ($scope.cartHelper.getCartItems()) {
+            angular.forEach($scope.cartHelper.getCartItems(),
             function (value, key) {
                     var count = value.shoppingItem.price * value.amount;
                     total = total + count;
@@ -328,14 +346,18 @@ angular.module('Store', ['ngCookies', 'ngRoute'])
         console.log("cart in checkOut: ");
         console.log(cart);
 
+        var encodedUser = $scope.jwtHelper.generateToken($scope.authService.getUser());
         $http({
             method: 'POST',
             url: 'http://localhost:8080/services/Rest/orders/create',
-            headers: {'Content-Type':'application/json'},
-            data: $scope.jwtHelper.generateToken(cart)
+            headers: {'Content-Type':'application/json',
+                      'tokenHeader': encodedUser},
+            data: cart
         }).then(
             function(response){
-                $window.location.href = '/orders?action=create';
+                console.log(response.data);
+                OrdersService.setOrder(response.data);
+                $location.path('/orders/create');
             },
             function (err) {
                 if (err){
@@ -345,15 +367,31 @@ angular.module('Store', ['ngCookies', 'ngRoute'])
         );
     };
 }])
-.controller('OrdersViewallController', ['$http', '$scope', '$window',
-    function($http, $scope, $window){
+.factory('OrdersService', ['$http', function($http){
+    var order = {};
+    return {
+        getOrder: function(){
+            return order;
+        },
+        setOrder: function(newOrder){
+            order = newOrder;
+        },
+        removeOrder: function(){
+            order = {};
+        }
+    }
+}])
+.controller('OrdersViewallController', ['$http', '$scope', 'JwtHelper', 'AuthService',
+    function($http, $scope, JwtHelper, AuthService){
     $scope.orders = {};
 
     $scope.fetchAllOrders = function(){
+        var encodedUser = JwtHelper.generateToken(AuthService.getUser());
         $http({
             method: 'POST',
             url: 'http://localhost:8080/services/Rest/orders/viewall',
-            headers: {'Content-Type':'application/json'},
+            headers: {'Content-Type':'application/json',
+                      'tokenHeader': encodedUser},
             data: null
         }).then(
             function (response) {
@@ -373,34 +411,16 @@ angular.module('Store', ['ngCookies', 'ngRoute'])
     $scope.fetchAllOrders();
 
     $scope.checkSpecificOrder = function(orderId){
-        $window.location.href = '/orders/' + orderId;
+
     }
-
 }])
-.controller('OrdersCreateController', ['$http', '$scope', '$window',
-    function($http, $scope, $window){
-    $scope.temporaryOrder = {};
-
-    $scope.fetchTemporaryOrder = function(){
-        $http.get("/services/Rest/orders/temporaryOrder").then(
-            function (response) {
-                $scope.temporaryOrder = response.data;
-                console.log("[fetchTempOrder] order: ");
-                console.log($scope.temporaryOrder);
-            },
-            function (err){
-                if (err) {
-                    console.log("Error fetching temporary order");
-                }
-            }
-        );
-    };
-
-    $scope.fetchTemporaryOrder();
+.controller('OrdersCreateController', ['$http', '$scope', 'OrdersService', 'JwtHelper',
+    'AuthService', '$location', function($http, $scope, OrdersService, JwtHelper, AuthService, $location){
+    $scope.ordersService = OrdersService;
 
     $scope.getOrderTotalPrice = function(){
         var totalPrice = 0;
-        angular.forEach($scope.temporaryOrder.items, function(cartItem, key){
+        angular.forEach($scope.ordersService.getOrder().items, function(cartItem, key){
            var count = cartItem.shoppingItem.price * cartItem.amount;
            totalPrice = totalPrice + count;
         });
@@ -408,16 +428,20 @@ angular.module('Store', ['ngCookies', 'ngRoute'])
     };
 
     $scope.sendOrder = function(){
+        var encodedUser = JwtHelper.generateToken(AuthService.getUser());
         $http({
             method: 'POST',
             url: 'http://localhost:8080/services/Rest/orders/finish',
-            headers: {'Content-Type':'application/json'},
-            data: $scope.temporaryOrder
+            headers: {'Content-Type':'application/json',
+                      'tokenHeader': encodedUser},
+            data: $scope.ordersService.getOrder()
         }).then(
             function (response) {
-                // get save order id from server
-                var orderId = response.data;
-                $window.location.href = "/orders?action=finish&orderId=" + orderId;
+                $scope.ordersService.setOrder(response.data);
+                console.log('[Finish order]: ');
+                console.log($scope.ordersService.getOrder());
+
+                $location.path('/orders/finish');
             }, function (err) {
                 if (err){
                     console.log("Error sending order");
@@ -426,37 +450,38 @@ angular.module('Store', ['ngCookies', 'ngRoute'])
         )
     };
 }])
-.controller('OrdersFinishController', ['$http', '$scope', '$window',
-    function($http, $scope, $window){
-    $scope.orderId = document.getElementById("orderId").textContent;
+.controller('OrdersFinishController', ['$http', '$scope', '$location', 'OrdersService',
+    function($http, $scope, $location, OrdersService){
+    $scope.ordersService = OrdersService;
 
     $scope.checkOrderContent = function(){
-        $window.location.href = '/orders/' + $scope.orderId;
+        $location.path('/orders/' + $scope.ordersService.getOrder().id);
     }
 }])
-.controller('OrderSingleController', ['$http', '$scope', function($http, $scope){
-    $scope.orderId = document.getElementById("orderId").textContent;
-    
+.controller('OrdersSingleController', ['$http', '$scope', '$routeParams', 'JwtHelper', 'AuthService',
+    function($http, $scope, $routeParams, JwtHelper, AuthService){
     $scope.finishOrder = {};
 
-    $scope.fetchSingleOrder = function(orderId){
+    $scope.fetchSingleOrder = function(){
+        var encodedUser = JwtHelper.generateToken(AuthService.getUser());
         $http({
             method: 'POST',
-            url: 'http://localhost:8080/services/Rest/orders/' + orderId,
-            headers: {'Content-Type':'application-json'},
+            url: 'http://localhost:8080/services/Rest/orders/' + $routeParams.id,
+            headers: {'Content-Type':'application-json',
+                      'tokenHeader': encodedUser},
             data: null
         }).then(
             function (response) {
                 $scope.finishOrder = response.data;
             }, function (err){
                 if (err){
-                    console.log("Error fetch single order with orderId: " + orderId);
+                    console.log("Error fetch single order with orderId: " + $routeParams.id);
                 }
             }
         );
     };
 
-    $scope.fetchSingleOrder($scope.orderId);
+    $scope.fetchSingleOrder();
     
     $scope.getOrderTotalPrice = function () {
         var totalPrice = 0;

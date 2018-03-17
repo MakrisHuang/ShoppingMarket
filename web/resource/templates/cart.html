@@ -10,7 +10,7 @@
             <th scope="col">Action</th>
         </tr>
         </thead>
-        <tbody ng-repeat="item in cartHelper.cart.cartItems">
+        <tbody ng-repeat="item in cartHelper.getCartItems()">
         <tr>
             <td>{{item.shoppingItem.name}}</td>
             <td>{{item.availableStatus}}</td>
@@ -22,13 +22,13 @@
             </td>
             <td>{{item.shoppingItem.price * item.amount}}</td>
             <td>
-                <button class="btn btn-danger btn-sm" ng-click="deleteItemInCart(item.shoppingItem, $index)"><spring:message code="cart.cancel"/></button>
+                <button class="btn btn-danger btn-md" ng-click="deleteItemInCart(item.shoppingItem, $index)">Cancel</button>
             </td>
         </tr>
         </tbody>
         <caption>Total Price : {{getCartTotalPrice()}}</caption>
     </table>
     <div>
-        <button class="btn btn-success btn float-sm-right" ng-click="checkOut(cartHelper.cart)">Check Out</button>
+        <button class="btn btn-success btn float-sm-right" ng-click="checkOut(cartHelper.getCart())">Check Out</button>
     </div>
 </section>

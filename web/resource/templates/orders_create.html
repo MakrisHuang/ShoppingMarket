@@ -1,4 +1,4 @@
-<section ng-controller="OrdersCreateController">
+<section>
     <h3>Your New Order</h3>
     <table class="table table-striped">
         <thead>
@@ -9,7 +9,7 @@
             <th scope="col">Total</th>
         </tr>
         </thead>
-        <tbody ng-repeat="item in temporaryOrder.items">
+        <tbody ng-repeat="item in ordersService.getOrder().items">
         <tr>
             <td>{{item.shoppingItem.name}}</td>
             <td>{{item.shoppingItem.price}}</td>

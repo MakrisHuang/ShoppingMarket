@@ -60,6 +60,7 @@
           <element id="library" level="project" name="Maven: org.hibernate:hibernate-validator-annotation-processor:5.1.2.Final" />
           <element id="library" level="project" name="Maven: junit:junit:4.0" />
           <element id="library" level="project" name="Maven: com.auth0:java-jwt:3.2.0" />
+          <element id="library" level="project" name="Maven: commons-codec:commons-codec:1.10" />
         </element>
       </element>
       <element id="directory" name="META-INF" />

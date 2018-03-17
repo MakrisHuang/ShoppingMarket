@@ -1,5 +1,4 @@
-<section ng-controller="OrdersFinishController">
-    <h3 id="orderId" ng-hide="true">${orderId}</h3>
+<section>
     <h3>Thanks for Your Ordering!</h3>
     <table class="table table-striped">
         <thead>
@@ -10,7 +9,7 @@
         </thead>
         <tbody>
         <tr>
-            <td>${orderId}</td>
+            <td>{{ordersService.getOrder().id}}</td>
             <td>
                 <button class="btn btn-info float-sm-left" ng-click="checkOrderContent()">
                     Check Order
