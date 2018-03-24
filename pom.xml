@@ -372,6 +372,13 @@
             <artifactId>spring-context-support</artifactId>
             <version>4.3.7.RELEASE</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-elasticsearch -->
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-elasticsearch</artifactId>
+            <version>3.0.5.RELEASE</version>
+        </dependency>
     </dependencies>
 
     <build>
