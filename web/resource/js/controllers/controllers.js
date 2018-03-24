@@ -25,6 +25,10 @@ angular.module('Store', ['ngCookies', 'ngRoute'])
             templateUrl: 'resource/templates/orders_single_order.html',
             controller: 'OrdersSingleController'
         })
+        .when('/profile', {
+            templateUrl: 'resource/templates/profile.html',
+            controller: 'ProfileController'
+        })
         .otherwise({ redirectTo: '/'});
 })
 .factory('AuthService', ['$http', '$cookies', function($http, $cookies){
@@ -93,6 +97,7 @@ angular.module('Store', ['ngCookies', 'ngRoute'])
 .factory('CartHelper', ['JwtHelper', 'AuthService', '$http',
     function (JwtHelper, AuthService, $http){
     var cart = {};
+    var hideSpinner = false;
 
     var service = {
 
@@ -120,6 +125,7 @@ angular.module('Store', ['ngCookies', 'ngRoute'])
         },
 
         updateItemInCart: function (cartItem) {
+            hideSpinner = false;
             var encodedUser = JwtHelper.generateToken(AuthService.getUser());
             return $http({
                 method: 'POST',
@@ -132,14 +138,17 @@ angular.module('Store', ['ngCookies', 'ngRoute'])
                     cart = response.data;
                     console.log("[(service) updateItemInCart] cart: ");
                     console.log(cart);
+                    hideSpinner = true;
                 },
                 function (err) {
                     console.log("Error in updating shopping item to cart");
                     console.log(err);
+                    hideSpinner = true;
                 }
             );
         },
         deleteItemInCart: function (shoppingItem) {
+            hideSpinner = false;
             var encodedUser = JwtHelper.generateToken(AuthService.getUser());
             return $http({
                 method: 'POST',
@@ -152,10 +161,12 @@ angular.module('Store', ['ngCookies', 'ngRoute'])
                     cart = response.data;
                     console.log("[(service) deleteItemInCart] cart: ");
                     console.log(cart);
+                    hideSpinner = true;
                 },
                 function (err) {
                     console.log("Error in removing shopping item to cart");
                     console.log(err);
+                    hideSpinner = true;
                 }
             );
         },
@@ -167,6 +178,12 @@ angular.module('Store', ['ngCookies', 'ngRoute'])
         },
         getCart: function(){
             return cart;
+        },
+        getHideSpinner: function(){
+            return hideSpinner;
+        },
+        setHideSpinner: function(hide){
+            hideSpinner = hide;
         }
     };
 
@@ -182,7 +199,6 @@ angular.module('Store', ['ngCookies', 'ngRoute'])
             $http.get(url).then(function (response) {
                 shoppingItems = response.data["content"];
                 console.log(shoppingItems);
-
             }, function (err) {
                 if (err) {
                     console.log("Error fetch shopping items");
@@ -191,17 +207,24 @@ angular.module('Store', ['ngCookies', 'ngRoute'])
         },
         getItems: function(){
             return shoppingItems;
+        },
+        hideSpinner: function(){
+            return (shoppingItems.length > 0);
         }
+
     }
 }])
 .controller('AuthController', ['AuthService', '$scope', '$http',
     function(AuthService, $scope, $http){
     $scope.authService = AuthService;
     $scope.user = $scope.authService.getUser();
+    $scope.loginTitle = "Login";
+    $scope.registerTitle = "Register";
 
     $scope.submitLogin = function(){
         if (this.username !== null || this.password !== null){
             var loginInfo = {'username': this.username, 'password': this.password};
+            $scope.loginTitle = "Logging...";
             return $http({
                 method: 'POST',
                 url: 'http://localhost:8080/services/Rest/login',
@@ -212,6 +235,9 @@ angular.module('Store', ['ngCookies', 'ngRoute'])
                         // get secret from header
                         $scope.authService.setSecret(response.headers('secret'));
                         $scope.authService.setUser(response.data);
+
+                        $scope.user = $scope.authService.getUser();
+                        $scope.loginTitle = "Login";
 
                         $('#loginModal').modal('hide');
                         $('#navbarsExampleDefault').collapse('hide');
@@ -232,25 +258,29 @@ angular.module('Store', ['ngCookies', 'ngRoute'])
             'telphone': this.telphone,
             'address': this.address
         };
+        $scope.registerTitle = "Registering";
         return $http({
             method: 'POST',
             url: 'http://localhost:8080/services/Rest/register',
             data: registerInfo
         }).then(
             function (response){
-                if (response.status === 200){
+                if (response.status === 201){
                     $scope.user = response.data;
 
                     // get secret from header
                     $scope.authService.setSecret(response.headers('secret'));
                     $scope.authService.setUser(response.data);
 
+                    $scope.user = $scope.authService.getUser();
+                    $scope.registerTitle = "Register";
+
                     $('#registerModal').modal('hide');
                     $('#navbarsExampleDefault').collapse('hide');
                 }
             },
             function (err){
-                console.log('Error in login with username: ' + $scope.authService.getUser().username);
+                console.log('Error in register with existed username: ' + this.username);
             }
         )
     };
@@ -286,8 +316,10 @@ angular.module('Store', ['ngCookies', 'ngRoute'])
     $scope.cartHelper = CartHelper;
     $scope.jwtHelper = JwtHelper;
     $scope.authService = AuthService;
+    $scope.spinnerMsg = "";
 
     $scope.fetchCart = function(){
+        $scope.spinnerMsg = "Loading cart...";
         var encoded = $scope.jwtHelper.generateToken($scope.authService.getUser());
         $http({
             method: 'POST',
@@ -297,10 +329,12 @@ angular.module('Store', ['ngCookies', 'ngRoute'])
         }).then(function(response){
             console.log(response.data);
             $scope.cartHelper.setCart(response.data);
+            $scope.cartHelper.setHideSpinner(true);
         }, function (err) {
             if (err){
                 console.log("Error fetching cart");
                 console.log(err);
+                $scope.cartHelper.setHideSpinner(true);
             }
         });
     };
@@ -308,20 +342,25 @@ angular.module('Store', ['ngCookies', 'ngRoute'])
     $scope.fetchCart();
 
     $scope.increaseAmount = function (cartItem){
-        cartItem.amount = cartItem.amount + 1;
-        $scope.cartHelper.updateItemInCart(cartItem);
+        $scope.spinnerMsg = "Updating cart...";
+        var newCartItem = cartItem;
+        newCartItem.amount = newCartItem.amount + 1;
+        $scope.cartHelper.updateItemInCart(newCartItem);
     };
 
     $scope.decreaseAmount = function (cartItem){
-        cartItem.amount = cartItem.amount - 1;
-        if (cartItem.amount === 0){
-            $scope.cartHelper.deleteItemInCart(cartItem);
+        $scope.spinnerMsg = "Updating cart...";
+        var newCartItem = cartItem;
+        newCartItem.amount = newCartItem.amount - 1;
+        if (newCartItem.amount === 0){
+            $scope.cartHelper.deleteItemInCart(newCartItem);
             return;
         }
-        $scope.cartHelper.updateItemInCart(cartItem);
+        $scope.cartHelper.updateItemInCart(newCartItem);
     };
 
     $scope.deleteItemInCart = function (shoppingItem) {
+        $scope.spinnerMsg = "Removing item in cart...";
         $scope.cartHelper.deleteItemInCart(shoppingItem);
     };
 
@@ -383,7 +422,11 @@ angular.module('Store', ['ngCookies', 'ngRoute'])
 }])
 .controller('OrdersViewallController', ['$http', '$scope', 'JwtHelper', 'AuthService',
     function($http, $scope, JwtHelper, AuthService){
-    $scope.orders = {};
+    $scope.orders = undefined;
+
+    $scope.hideSpinner = function(){
+        return ($scope.orders !== undefined);
+    };
 
     $scope.fetchAllOrders = function(){
         var encodedUser = JwtHelper.generateToken(AuthService.getUser());
@@ -460,7 +503,11 @@ angular.module('Store', ['ngCookies', 'ngRoute'])
 }])
 .controller('OrdersSingleController', ['$http', '$scope', '$routeParams', 'JwtHelper', 'AuthService',
     function($http, $scope, $routeParams, JwtHelper, AuthService){
-    $scope.finishOrder = {};
+    $scope.finishOrder = undefined;
+
+    $scope.hideSpinner = function(){
+        return ($scope.finishOrder !== undefined);
+    };
 
     $scope.fetchSingleOrder = function(){
         var encodedUser = JwtHelper.generateToken(AuthService.getUser());
@@ -491,4 +538,8 @@ angular.module('Store', ['ngCookies', 'ngRoute'])
         });
         return totalPrice;
     }
+}])
+.controller('ProfileController', ['AuthService', 'JwtHelper', '$http',
+    function(AuthService, JwtHelper, $http){
+
 }]);

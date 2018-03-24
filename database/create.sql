@@ -1,6 +1,4 @@
-CREATE DATABASE ShoppingMarket DEFAULT CHARACTER SET 'utf8'
-  DEFAULT COLLATE 'utf8_unicode_ci';
-
+CREATE DATABASE ShoppingMarket;
 USE ShoppingMarket;
 
 CREATE TABLE UserPrincipal (
@@ -36,17 +34,6 @@ CREATE TABLE ShoppingItem (
   Image BLOB NULL
 ) ENGINE = InnoDB;
 
-CREATE TABLE Orders_CartItemForOrder(
-  SortKey SMALLINT NOT NULL ,
-  OrderId BIGINT UNSIGNED NOT NULL,
-  CartItemForOrderId BIGINT UNSIGNED NOT NULL,
-  CONSTRAINT Orders_CartItemForOrder_Order FOREIGN KEY (OrderId)
-    REFERENCES Orders(OrderId) ON DELETE CASCADE,
-  CONSTRAINT Orders_CartItemForOrder_CartItemForOrder FOREIGN KEY (CartItemForOrderId)
-    REFERENCES CartItemForOrder(CartItemForOrderId) ON DELETE CASCADE,
-  INDEX Orders_OrderedCartItems (OrderId, SortKey, CartItemForOrderId)
-) ENGINE = InnoDB;
-
 CREATE TABLE Cart(
   CartId BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   UserId BIGINT UNSIGNED NOT NULL,
@@ -78,3 +65,13 @@ CREATE TABLE Cart_CartItem(
     REFERENCES Cart(CartId) ON DELETE CASCADE
 ) ENGINE = InnoDB;
 
+CREATE TABLE Orders_CartItemForOrder(
+  SortKey SMALLINT NOT NULL ,
+  OrderId BIGINT UNSIGNED NOT NULL,
+  CartItemForOrderId BIGINT UNSIGNED NOT NULL,
+  CONSTRAINT Orders_CartItemForOrder_Order FOREIGN KEY (OrderId)
+    REFERENCES Orders(OrderId) ON DELETE CASCADE,
+  CONSTRAINT Orders_CartItemForOrder_CartItemForOrder FOREIGN KEY (CartItemForOrderId)
+    REFERENCES CartItemForOrder(CartItemForOrderId) ON DELETE CASCADE,
+  INDEX Orders_OrderedCartItems (OrderId, SortKey, CartItemForOrderId)
+) ENGINE = InnoDB;

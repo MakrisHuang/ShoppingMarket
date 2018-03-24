@@ -3,8 +3,6 @@ package com.makris.site.controller;
 import com.makris.config.annotation.WebController;
 import com.makris.site.entities.UserPrincipal;
 import com.makris.site.security.JwtUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -15,11 +13,8 @@ import java.util.Map;
 
 @WebController
 public class HomeController {
-    private static final Logger logger = LogManager.getLogger();
-
     // JSP page name
-    private static final String JSP_HOME = "/shopping/items";
-
+    private static final String JSP_HOME            = "/shopping/items";
     private static final String ATTR_USERNAME       = "userName";
 
     @Inject

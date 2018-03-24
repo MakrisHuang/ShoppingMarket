@@ -4,13 +4,11 @@
 <%@ attribute name="bodyTitle" type="java.lang.String" rtexprvalue="true"
               required="true" %>
 
-<%@ attribute name="registerFragment" fragment="true" required="false" %>
 <%@ include file="/WEB-INF/jsp/base.jspf" %>
 <!DOCTYPE html>
 <html ng-app="Store">
     <head>
-        <title><spring:message code="title.customer.support" /> ::
-            <c:out value="${fn:trim(htmlTitle)}" /></title>
+        <title><spring:message code="title.company"/> - <c:out value="${fn:trim(htmlTitle)}" /></title>
 
         <!--Bootstrap and jquery-->
         <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
@@ -19,6 +17,9 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css"
               integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy"
               crossorigin="anonymous">
+
+        <!-- icon -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
         <!-- angularJS -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.6/angular.js"></script>
@@ -88,13 +89,12 @@
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="loginModalLabel">Modal title</h5>
+                            <h5 class="modal-title" id="loginModalLabel"><spring:message code="title.login"/></h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
-
                             <spring:message code="message.login.instruction" /><br /><br />
                             <c:if test="${loginFailed}">
                                 <b class="errors"><spring:message code="error.login.failed" /></b><br />
@@ -116,7 +116,7 @@
                                 <input type="password" ng-model="password"><br><br>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary"><spring:message code="field.login.submit" /></button>
+                                    <button type="submit" class="btn btn-primary">{{loginTitle}}</button>
                                 </div>
                             </form>
                         </div>
@@ -130,7 +130,7 @@
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="registerModalLabel">Modal title</h5>
+                            <h5 class="modal-title" id="registerModalLabel"><spring:message code="title.register"/></h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -155,7 +155,7 @@
 
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary"><spring:message code="field.register.submit" /></button>
+                                    <button type="submit" class="btn btn-primary">{{registerTitle}}</button>
                                 </div>
                             </form>
                         </div>
@@ -187,7 +187,5 @@
                 </main>
             </div>
         </div>
-
-
     </body>
 </html>

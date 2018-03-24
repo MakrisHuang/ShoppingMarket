@@ -365,6 +365,13 @@
             <artifactId>jquery</artifactId>
             <version>3.2.1</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.springframework/spring-context-support -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>4.3.7.RELEASE</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -1,4 +1,7 @@
-<section ng-controller="CartController">
+<div class="alert alert-info" ng-hide="cartHelper.getHideSpinner()">
+    <span class="fa fa-refresh fa-1x glyphicon-refresh-animate" id="spinner" style="margin-right: 5px"></span>{{spinnerMsg}}
+</div>
+<section>
     <table class="table table-striped">
         <thead>
         <tr>
