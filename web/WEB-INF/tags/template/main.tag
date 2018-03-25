@@ -166,44 +166,70 @@
 
         <div class="container-fluid">
             <div class="row">
+
                 <nav class="col-sm-3 col-md-2 d-none d-sm-block bg-light sidebar"
                      ng-controller="CategoryController">
                     <ul class="nav nav-pills flex-column">
                         <!-- 商品專區 -->
                         <li class="nav-item">
                             <a class="nav-link" href="#homeSubmenu" data-toggle="collapse" aria-expanded="true"><spring:message code="title.shopping"/></a>
-                            <ul class="collapse list-unstyled" id="homeSubmenu">
+                            <ul class="list-unstyled" id="homeSubmenu">
                                 <li><a class="nav-link" href="" ng-click="updateContent(0, 'pc', 3)"><spring:message code="title.shopping.pc"/></a></li>
                                 <li><a class="nav-link" href="" ng-click="updateContent(0, 'cell phone', 3)"><spring:message code="title.shopping.cellphone"/></a></li>
                                 <li><a class="nav-link" href="" ng-click="updateContent(0, 'tv', 3)"><spring:message code="title.shopping.tv"/></a></li>
                             </ul>
                         </li>
+
+                        <hr>
+                        <div class="alert alert-success" role="alert">
+                            <spring:message code="introduction.brief"/><br>
+                            Image and Text are available from <a href="https://tw.buy.yahoo.com">Yahoo Shopping Market</a>
+                        </div>
                     </ul>
                 </nav>
 
                 <main role="main" class="col-sm-9 ml-sm-auto col-md-10 pt-3">
                     <jsp:doBody/>
                     <div ng-view></div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Special title treatment</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                                    <a href="#" class="btn btn-primary">Go somewhere</a>
+
+                    <footer>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><spring:message code="introduction.title.technical"/></h5>
+                                        <p class="card-text"><spring:message code="introduction.technical.body"/></p>
+                                        <a href="https://spring.io" class="btn btn-info btn-sm">Spring.io</a>
+                                        <a href="https://aws.amazon.com" class="btn btn-info btn-sm">AWS</a>
+                                        <a href="https://tomcat.apache.org" class="btn btn-info btn-sm">Tomcat</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><spring:message code="introduction.title.security"/></h5>
+                                        <p class="card-text"><spring:message code="introduction.security.body"/></p>
+                                        <a href="https://zh.wikipedia.org/wiki/Bcrypt" class="btn btn-info btn-sm">BCrypt</a>
+                                        <a href="https://jwt.io" class="btn btn-info btn-sm">JWT</a>
+                                        <a href="https://auth0.com" class="btn btn-info btn-sm">Auth0</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><spring:message code="introduction.title.frontend"/></h5>
+                                        <p class="card-text"><spring:message code="introduction.frontend.body"/></p>
+                                        <a href="https://angularjs.org" class="btn btn-info btn-sm">AngularJS</a>
+                                        <a href="https://getbootstrap.com" class="btn btn-info btn-sm">Bootstrap</a>
+                                        <a href="https://zh.wikipedia.org/wiki/JSP" class="btn btn-info btn-sm">JSP</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-6">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Special title treatment</h5>
-                                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                                    <a href="#" class="btn btn-primary">Go somewhere</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    </footer>
                 </main>
             </div>
         </div>
