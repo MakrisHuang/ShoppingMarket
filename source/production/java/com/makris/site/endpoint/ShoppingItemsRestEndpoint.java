@@ -5,7 +5,9 @@ import com.makris.config.annotation.RestEndpoint;
 import com.makris.exception.ShoppingItemNotFoundException;
 import com.makris.site.entities.ShoppingItem;
 import com.makris.site.service.ShoppingService;
-import org.springframework.cache.annotation.Cacheable;
+import net.sf.ehcache.CacheManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +21,10 @@ import javax.inject.Inject;
 public class ShoppingItemsRestEndpoint {
     @Inject
     ShoppingService shoppingService;
+    @Inject
+    CacheManager cacheManager;
+
+    private static final Logger logger = LogManager.getLogger();
 
     @RequestMapping(value = "shopping", method = RequestMethod.GET)
     @ResponseBody @ResponseStatus(HttpStatus.OK)
@@ -34,11 +40,11 @@ public class ShoppingItemsRestEndpoint {
         return this.shoppingService.getShoppingItems(category, pageable);
     }
 
-    @Cacheable(value = "shoppingItemCache", key = "#result.id")
     @RequestMapping(value = "shopping/{id}", method = RequestMethod.GET)
     @ResponseBody @ResponseStatus(HttpStatus.OK)
     public ShoppingItem getShoppingItemsWithId(@PathVariable(value = "id") int id){
         ShoppingItem item = this.shoppingService.getShoppingItem(id);
+
         if (item == null){
             throw new ShoppingItemNotFoundException(id);
         }

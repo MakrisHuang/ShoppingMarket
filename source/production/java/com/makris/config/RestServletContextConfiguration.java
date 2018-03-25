@@ -6,10 +6,14 @@ import com.makris.config.annotation.RestEndpointAdvice;
 import com.makris.site.security.JwtUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.ehcache.EhCacheCacheManager;
+import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -25,6 +29,7 @@ import org.springframework.http.converter.xml.MarshallingHttpMessageConverter;
 import org.springframework.http.converter.xml.SourceHttpMessageConverter;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
+import org.springframework.stereotype.Service;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.SpringValidatorAdapter;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -44,8 +49,9 @@ import java.util.List;
         basePackages = "com.makris.site",
         useDefaultFilters = false,
         includeFilters =
-        @ComponentScan.Filter({RestEndpoint.class, RestEndpointAdvice.class})
+        @ComponentScan.Filter({RestEndpoint.class, RestEndpointAdvice.class, Service.class})
 )
+@EnableCaching
 public class RestServletContextConfiguration extends WebMvcConfigurerAdapter
 {
     private static final Logger log = LogManager.getLogger();
@@ -142,5 +148,20 @@ public class RestServletContextConfiguration extends WebMvcConfigurerAdapter
     @Bean
     public JwtUtils jwtUtils(){
         return new JwtUtils();
+    }
+
+    @Bean
+    public EhCacheCacheManager cacheManager(){
+        return new EhCacheCacheManager(ehcache().getObject());
+    }
+    @Bean
+    public EhCacheManagerFactoryBean ehcache(){
+        EhCacheManagerFactoryBean ehCacheManagerFactoryBean =
+                new EhCacheManagerFactoryBean();
+        ehCacheManagerFactoryBean.setConfigLocation(
+                new ClassPathResource("/ehCache/ehcache.xml")
+        );
+        ehCacheManagerFactoryBean.setShared(true);
+        return ehCacheManagerFactoryBean;
     }
 }

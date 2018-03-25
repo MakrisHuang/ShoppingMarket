@@ -7,6 +7,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface ShoppingItemRepository extends CrudRepository<ShoppingItem, Long> {
     Page<ShoppingItem> getByCategory(String category, Pageable pageable);
-
 }
 

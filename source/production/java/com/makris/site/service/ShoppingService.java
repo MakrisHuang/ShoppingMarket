@@ -7,5 +7,6 @@ import org.springframework.data.domain.Pageable;
 public interface ShoppingService {
     // return a shopping item
     ShoppingItem getShoppingItem(long shoppingItemId);
+
     Page<ShoppingItem> getShoppingItems(String category, Pageable pageable);
 }
